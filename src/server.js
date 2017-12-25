@@ -20,6 +20,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/server';
 import { getDataFromTree } from 'react-apollo';
 import PrettyError from 'pretty-error';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import createApolloClient from './core/createApolloClient';
 import App from './components/App';
 import Html from './components/Html';
@@ -180,9 +182,19 @@ app.get('*', async (req, res, next) => {
     const data = { ...route };
 
     const rootComponent = (
-      <App context={context} store={store}>
-        {route.component}
-      </App>
+      <MuiThemeProvider
+        muiTheme={getMuiTheme({
+          userAgent: req.headers['user-agent'],
+        })}
+      >
+        <App
+          context={context}
+          store={store}
+          userAgent={req.headers['user-agent']}
+        >
+          {route.component}
+        </App>
+      </MuiThemeProvider>
     );
     await getDataFromTree(rootComponent);
     // this is here because of Apollo redux APOLLO_QUERY_STOP action

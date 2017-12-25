@@ -13,6 +13,8 @@ import ReactDOM from 'react-dom';
 import deepForceUpdate from 'react-deep-force-update';
 import queryString from 'query-string';
 import { createPath } from 'history/PathUtils';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import App from './components/App';
 import createFetch from './createFetch';
 import configureStore from './store/configureStore';
@@ -139,7 +141,9 @@ async function onLocationChange(location, action) {
     }
 
     appInstance = ReactDOM.render(
-      <App context={context}>{route.component}</App>,
+      <MuiThemeProvider>
+        <App context={context}>{route.component}</App>
+      </MuiThemeProvider>,
       container,
       () => onRenderComplete(route, location),
     );
