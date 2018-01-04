@@ -46,9 +46,7 @@ class Go extends React.Component {
   }
 
   render() {
-    const {
-      data: { loading, game: { rule, color } },
-    } = this.props;
+    const { data: { loading, game: { rule, color } } } = this.props;
     if (loading) {
       return <div>Loading...</div>;
     }
