@@ -1,6 +1,5 @@
 ---
-title: About Us
-component: ContentPage
+title: Privacy Policy
 ---
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean consequat tortor

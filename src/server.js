@@ -138,7 +138,6 @@ app.get('*', async (req, res, next) => {
 
     const store = configureStore(initialState, {
       cookie: req.headers.cookie,
-      apolloClient,
       fetch,
       // I should not use `history` on server.. but how I do redirection? follow universal-router
       history: null,
@@ -170,7 +169,7 @@ app.get('*', async (req, res, next) => {
 
     const route = await router.resolve({
       ...context,
-      path: req.path,
+      pathname: req.path,
       query: req.query,
     });
 
@@ -180,7 +179,6 @@ app.get('*', async (req, res, next) => {
     }
 
     const data = { ...route };
-
     const rootComponent = (
       <MuiThemeProvider
         muiTheme={getMuiTheme({
@@ -216,6 +214,7 @@ app.get('*', async (req, res, next) => {
     data.app = {
       apiUrl: config.api.clientUrl,
       state: context.store.getState(),
+      apolloState: context.client.extract(),
     };
 
     const html = ReactDOM.renderToStaticMarkup(<Html {...data} />);

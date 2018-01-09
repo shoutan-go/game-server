@@ -11,12 +11,12 @@
 
 // The top-level (parent) route
 const routes = {
-  path: '/',
+  path: '',
 
   // Keep in mind, routes are evaluated in order
   children: [
     {
-      path: '/',
+      path: '',
       load: () => import(/* webpackChunkName: 'home' */ './home'),
     },
     {
@@ -45,9 +45,9 @@ const routes = {
         },
       ],
     },
-    // Wildcard routes, e.g. { path: '*', ... } (must go last)
+    // Wildcard routes, e.g. { path: '(.*)', ... } (must go last)
     {
-      path: '*',
+      path: '(.*)',
       load: () => import(/* webpackChunkName: 'not-found' */ './not-found'),
     },
   ],
