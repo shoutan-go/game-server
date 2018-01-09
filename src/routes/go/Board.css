@@ -1,0 +1,25 @@
+.board {
+  display: flex;
+  flex-direction: column;
+  background: no-repeat center/cover;
+  position: relative;
+  width: 82vw; /* 1:1 Aspect Ratio */
+  height: 82vw;
+  padding: 3vw;
+  background-image: url('./goboard.jpg');
+}
+
+.highlight {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.boardrow {
+  flex-basis: 100%;
+  display: flex;
+}
+
+.board .star {
+  border-radius: 50%;
+  background: radial-gradient(black 20%, transparent 20%);
+  background-position: 1.5px 1.5px;
+}

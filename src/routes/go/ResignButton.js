@@ -2,22 +2,20 @@
  * @author lookis on 26/12/2017
  */
 import React from 'react';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import s from './ResignButton.css';
+import PropTypes from 'prop-types';
 
 class ResignButton extends React.Component {
-  handleClick() {
-    // if (this.props.board.resign(this.props.color)) {
-    //   this.props.sdk.resign(this.props.gameId, this.props.player);
-    // }
-  }
+  static propTypes = {
+    handleResign: PropTypes.func.isRequired,
+  };
+
   render() {
     return (
-      <button id="resign-btn" type="button" onClick={this.handleClick}>
+      <button id="resign-btn" type="button" onClick={this.props.handleResign}>
         认输
       </button>
     );
   }
 }
 
-export default withStyles(s)(ResignButton);
+export default ResignButton;

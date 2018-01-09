@@ -1,0 +1,48 @@
+
+.gameinfo {
+  display: flex;
+  margin: 10px 0;
+  width: 100%;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gameinfo > .player {
+  display: inherit;
+  width: 50%;
+}
+
+.gameinfo > .player:nth-child(2) {
+  direction: rtl;
+}
+
+.gameinfo .info {
+  margin: 0 13px;
+  color: rgba(255, 255, 255, 0.3);
+  line-height: 18px;
+}
+
+.gameinfo > .player:nth-child(2) .info {
+  text-align: right;
+}
+
+.gameinfo .info > .active {
+  color: white;
+}
+
+.gameinfo .info > .active::after {
+  content: '●';
+}
+
+.gameinfo .player:nth-child(2) .info > .active::after {
+  content: '○';
+}
+
+.gameinfo .info > span {
+  display: inherit;
+}
+
+.gameinfo .name {
+  font-size: 16px;
+}

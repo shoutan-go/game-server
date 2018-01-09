@@ -1,0 +1,18 @@
+button {
+  background: linear-gradient(#fff, #b7a3f1);
+  width: 50%;
+  height: 2.5em;
+  font-size: 1.5em;
+  border-color: #000;
+}
+
+button:active {
+  background: linear-gradient(#b7a3f1, #fff);
+}
+
+.confirm {
+  width: 25%;
+  height: 1.5em;
+  border-radius: 8px;
+  font-size: 1.3em;
+}
