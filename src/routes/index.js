@@ -33,14 +33,15 @@ const routes = {
     },
     {
       path: '/go',
+      protected: true,
       children: [
         {
-          path: '',
+          path: '/creation',
           load: () =>
             import(/* webpackChunkName: 'go-creation' */ './go-creation'),
         },
         {
-          path: '/:game/:player*',
+          path: '',
           load: () => import(/* webpackChunkName: 'go' */ './go'),
         },
       ],

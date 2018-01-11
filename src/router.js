@@ -12,6 +12,9 @@ import routes from './routes';
 
 export default new UniversalRouter(routes, {
   resolveRoute(context, params) {
+    if (context.route.protected && !context.user) {
+      return { redirect: '/login/wechat', from: context.pathname };
+    }
     if (typeof context.route.load === 'function') {
       return context.route
         .load()

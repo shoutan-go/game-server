@@ -65,4 +65,12 @@ module.exports = {
         'KTZ6cxoKnEakQCeSpZlaUCJWGAlTEBJj0y2EMkUBujA7zWSvaQ',
     },
   },
+
+  // Redis
+  redis: process.env.REDIS || 'redis://localhost:6379',
+
+  wechat: {
+    appId: 'wxc67a197c5c3f004e',
+    appSecret: '60e541fff59447a7267502f974cc262d',
+  },
 };

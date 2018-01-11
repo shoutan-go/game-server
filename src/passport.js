@@ -15,6 +15,7 @@
 
 import passport from 'passport';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
+import { Strategy as WechatStrategy } from 'passport-wechat';
 import { User, UserLogin, UserClaim, UserProfile } from './data/models';
 import config from './config';
 
@@ -116,6 +117,116 @@ passport.use(
                     picture: `https://graph.facebook.com/${
                       profile.id
                     }/picture?type=large`,
+                  },
+                },
+                {
+                  include: [
+                    { model: UserLogin, as: 'logins' },
+                    { model: UserClaim, as: 'claims' },
+                    { model: UserProfile, as: 'profile' },
+                  ],
+                },
+              );
+              done(null, {
+                id: user.id,
+                email: user.email,
+              });
+            }
+          }
+        }
+      };
+
+      fooBar().catch(done);
+    },
+  ),
+);
+
+passport.use(
+  new WechatStrategy(
+    {
+      appID: config.wechat.appId,
+      appSecret: config.wechat.appSecret,
+      callbackURL: '/login/wechat/return',
+      client: 'wechat',
+      scope: 'snsapi_userinfo',
+      passReqToCallback: true,
+    },
+    (req, accessToken, refreshToken, profile, done) => {
+      /* eslint-disable no-underscore-dangle */
+      const loginName = 'wechat';
+      const claimType = 'urn:wechat:access_token';
+      const id = profile.unionid || profile.openid;
+      const fooBar = async () => {
+        if (req.user) {
+          const userLogin = await UserLogin.findOne({
+            attributes: ['name', 'key'],
+            where: { name: loginName, key: id },
+          });
+          if (userLogin) {
+            // There is already a Facebook account that belongs to you.
+            // Sign in with that account or delete it, then link it with your current account.
+            done();
+          } else {
+            const user = await User.create(
+              {
+                id: req.user.id,
+                email: `${id}@wechat`,
+                logins: [{ name: loginName, key: id }],
+                claims: [{ type: claimType, value: id }],
+                profile: {
+                  displayName: profile.nickname,
+                  gender: profile.sex,
+                  picture: profile.headimgurl,
+                },
+              },
+              {
+                include: [
+                  { model: UserLogin, as: 'logins' },
+                  { model: UserClaim, as: 'claims' },
+                  { model: UserProfile, as: 'profile' },
+                ],
+              },
+            );
+            done(null, {
+              id: user.id,
+              email: user.email,
+            });
+          }
+        } else {
+          const users = await User.findAll({
+            attributes: ['id', 'email'],
+            where: { '$logins.name$': loginName, '$logins.key$': id },
+            include: [
+              {
+                attributes: ['name', 'key'],
+                model: UserLogin,
+                as: 'logins',
+                required: true,
+              },
+            ],
+          });
+          if (users.length) {
+            const user = users[0].get({ plain: true });
+            done(null, user);
+          } else {
+            let user = await User.findOne({
+              where: { email: `${id}@wechat` },
+            });
+            if (user) {
+              // There is already an account using this email address. Sign in to
+              // that account and link it with Facebook manually from Account Settings.
+              done(null);
+            } else {
+              user = await User.create(
+                {
+                  email: `${id}@wechat`,
+                  emailConfirmed: true,
+                  logins: [{ name: loginName, key: id }],
+                  claims: [{ type: claimType, value: accessToken }],
+                  profile: {
+                    displayName: profile.nickname,
+                    gender: profile.sex,
+                    picture: profile.headimgurl,
                   },
                 },
                 {

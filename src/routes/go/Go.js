@@ -40,20 +40,66 @@ class Go extends React.Component {
         captured: 0,
       },
       turn: GameEngine.Go.COLOR.EMPTY,
+      color: 0,
       result: null,
     };
     this.engine = null;
+    this.game.init = this.game.init.bind(this);
+    this.game.append = this.game.append.bind(this);
+
+    this.handler.pass = this.handler.pass.bind(this);
+    this.handler.resign = this.handler.resign.bind(this);
+    this.handler.click = this.handler.click.bind(this);
+    this.handler.confirm = this.handler.confirm.bind(this);
+
+    this.connection.message = this.connection.message.bind(this);
   }
 
   game = {
-    init: theGame => {},
-    append: move => {},
+    init: theGame => {
+      this.engine = new GameEngine[theGame.engine](theGame.info, theGame.moves);
+    },
+    append: move => {
+      this.engine[move.type](
+        move.color,
+        move.position && move.position[0],
+        move.position && move.position[1],
+      );
+    },
   };
 
   handler = {
-    pass: () => {},
-    resign: () => {},
-    click: () => {},
+    pass: () => {
+      if (this.engine.currentColor() === this.state.color) {
+        this.engine.pass(this.state.color);
+        this.websocket.sendMessage({
+          color: this.state.color,
+          type: 'pass',
+        });
+      }
+    },
+    resign: () => {
+      if (this.engine.currentColor() === this.state.color) {
+        this.engine.resign(this.state.color);
+        this.websocket.sendMessage({
+          color: this.state.color,
+          type: 'resign',
+        });
+      }
+    },
+    click: (i, j) => {
+      if (
+        this.engine.currentColor() === this.state.color &&
+        this.engine.rules(this.state.color, i, j)
+      ) {
+        this.engine.play(this.state.color, i, j);
+        this.websocket.sendMessage({
+          color: this.state.color,
+          type: 'play',
+          position: [i, j],
+        });
+      }
+    },
     confirm: () => {},
   };
 
@@ -62,7 +108,6 @@ class Go extends React.Component {
       if (msg && msg.code === 'ok') {
         switch (msg.type) {
           case 'init':
-            this.engine = GameEngine[msg.engine];
             this.game.init(msg.game);
             break;
           case 'delta':
@@ -80,11 +125,19 @@ class Go extends React.Component {
   render() {
     return (
       <div className={s.container}>
-        <WebSocket
-          onMessage={this.connection.message}
-          url={`/connection/${this.props.id}`}
-          reconnectIntervalInMilliSeconds={100}
-        />
+        {typeof window !== 'undefined' ? (
+          <WebSocket
+            onMessage={this.connection.message}
+            url={`ws://${window.location.host}/channel/${this.props.id}`}
+            reconnectIntervalInMilliSeconds={100}
+            ref={Websocket => {
+              this.websocket = Websocket;
+            }}
+          />
+        ) : (
+          <div />
+        )}
+
         <Info
           black={this.state.black}
           white={this.state.white}

@@ -4,14 +4,24 @@
 import React from 'react';
 import Creation from './Creation';
 import Layout from '../../components/Layout';
+import createGo from './creation.graphql';
 
-function action() {
+function action({ client }) {
+  const handleCreate = (rule, boardsize) =>
+    client.mutate({
+      mutation: createGo,
+      variables: {
+        rule,
+        boardsize,
+      },
+    });
+
   return {
     chunks: ['go-creation'],
     title: '新建对局',
     component: (
       <Layout>
-        <Creation />
+        <Creation create={handleCreate} />
       </Layout>
     ),
   };

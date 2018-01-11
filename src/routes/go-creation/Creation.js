@@ -8,14 +8,24 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import swal from 'sweetalert2';
-import GameEngine from 'game-engine';
+import PropTypes from 'prop-types';
+// import GameEngine from 'game-engine';
 import s from './Creation.css';
 
 class Creation extends React.Component {
-  state = {
-    rule: 'normal',
-    boardsize: 19,
+  static propTypes = {
+    create: PropTypes.func.isRequired,
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      rule: 'normal',
+      boardsize: 19,
+      color: 'black',
+    };
+    this.submit = this.submit.bind(this);
+  }
 
   handler(id) {
     const self = this;
@@ -27,7 +37,9 @@ class Creation extends React.Component {
   }
 
   submit() {
-    swal('Good job!', 'You clicked the button!', 'success');
+    this.props.create(this.state.rule, this.state.boardsize).then(r => {
+      swal('Good job!', r.data.createGo.id, 'success');
+    });
   }
 
   render() {
@@ -42,8 +54,8 @@ class Creation extends React.Component {
               value={this.state.rule}
               onChange={this.handler('rule')}
             >
-              <MenuItem value={'normal'} primaryText="普通" />
-              <MenuItem value={'capture'} primaryText="吃子棋" />
+              <MenuItem value="normal" primaryText="普通" />
+              <MenuItem value="capture" primaryText="吃子棋" />
             </SelectField>
             <br />
             <SelectField
@@ -55,6 +67,15 @@ class Creation extends React.Component {
               <MenuItem value={9} primaryText="9路" />
               <MenuItem value={13} primaryText="13路" />
               <MenuItem value={19} primaryText="19路" />
+            </SelectField>
+            <SelectField
+              id="color"
+              floatingLabelText="我方颜色"
+              value={this.state.color}
+              onChange={this.handler('color')}
+            >
+              <MenuItem value="black" primaryText="执黑" />
+              <MenuItem value="white" primaryText="执白" />
             </SelectField>
             <div className={s.submit}>
               <RaisedButton

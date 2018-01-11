@@ -10,6 +10,8 @@
 import path from 'path';
 import Promise from 'bluebird';
 import express from 'express';
+import session from 'express-session';
+import expressWs from 'express-ws';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import expressJwt, { UnauthorizedError as Jwt401Error } from 'express-jwt';
@@ -28,6 +30,7 @@ import Html from './components/Html';
 import { ErrorPageWithoutStyle } from './routes/error/ErrorPage';
 import errorPageStyle from './routes/error/ErrorPage.css';
 import createFetch from './createFetch';
+import connection from './connection';
 import passport from './passport';
 import router from './router';
 import models from './data/models';
@@ -38,7 +41,7 @@ import { setRuntimeVariable } from './actions/runtime';
 import config from './config';
 
 const app = express();
-
+expressWs(app);
 //
 // Tell any CSS tooling (such as Material UI) to use all vendor prefixes if the
 // user agent is not known.
@@ -53,7 +56,14 @@ app.use(express.static(path.resolve(__dirname, 'public')));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
+app.use(
+  session({
+    secret: "it's a secret",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true },
+  }),
+);
 //
 // Authentication
 // -----------------------------------------------------------------------------
@@ -100,6 +110,26 @@ app.get(
     res.redirect('/');
   },
 );
+app.get(
+  '/login/wechat',
+  (req, res, next) => {
+    req.session.next = req.headers.referer;
+    next();
+  },
+  passport.authenticate('wechat'),
+);
+app.get(
+  '/login/wechat/return',
+  passport.authenticate('wechat', {
+    failureRedirect: '/login/wechat',
+  }),
+  (req, res) => {
+    const expiresIn = 60 * 60 * 24 * 180; // 180 days
+    const token = jwt.sign(req.user, config.auth.jwt.secret, { expiresIn });
+    res.cookie('id_token', token, { maxAge: 1000 * expiresIn, httpOnly: true });
+    res.redirect(req.session.next || '/');
+  },
+);
 
 //
 // Register API middleware
@@ -112,6 +142,7 @@ const graphqlMiddleware = expressGraphQL(req => ({
 }));
 
 app.use('/graphql', graphqlMiddleware);
+app.use(connection());
 
 //
 // Register server-side rendering middleware
@@ -166,7 +197,6 @@ app.get('*', async (req, res, next) => {
       // Apollo Client for use with react-apollo
       client: apolloClient,
     };
-
     const route = await router.resolve({
       ...context,
       pathname: req.path,

@@ -51,9 +51,7 @@ class Info extends React.Component {
             >
               {this.props.black.name}
             </span>
-            <span>
-              {this.props.black.captured} 提子
-            </span>
+            <span>{this.props.black.captured} 提子</span>
           </div>
         </div>
         <div className={s.player}>
@@ -72,9 +70,7 @@ class Info extends React.Component {
             >
               {this.props.white.name}
             </span>
-            <span>
-              {this.props.white.captured} 提子
-            </span>
+            <span>{this.props.white.captured} 提子</span>
           </div>
         </div>
       </div>
