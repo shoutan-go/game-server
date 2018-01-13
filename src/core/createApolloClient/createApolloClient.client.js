@@ -4,7 +4,6 @@ import { ApolloClient } from 'apollo-client';
 import { from } from 'apollo-link';
 import { onError } from 'apollo-link-error';
 import { HttpLink } from 'apollo-link-http';
-import apolloLogger from 'apollo-link-logger';
 import createCache from './createCache';
 
 const link = from([
@@ -17,7 +16,6 @@ const link = from([
       );
     if (networkError) console.warn(`[Network error]: ${networkError}`);
   }),
-  ...(__DEV__ ? [apolloLogger] : []),
   new HttpLink({
     uri: '/graphql',
     credentials: 'include',
