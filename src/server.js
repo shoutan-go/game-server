@@ -11,6 +11,7 @@ import path from 'path';
 import Promise from 'bluebird';
 import express from 'express';
 import session from 'express-session';
+import connectRedis from 'connect-redis';
 import expressWs from 'express-ws';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
@@ -33,6 +34,7 @@ import createFetch from './createFetch';
 import connection from './connection';
 import passport from './passport';
 import router from './router';
+import { redis } from './redis';
 import models from './data/models';
 import schema from './data/schema';
 import assets from './assets.json'; // eslint-disable-line import/no-unresolved
@@ -56,14 +58,6 @@ app.use(express.static(path.resolve(__dirname, 'public')));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(
-  session({
-    secret: "it's a secret",
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true },
-  }),
-);
 //
 // Authentication
 // -----------------------------------------------------------------------------
@@ -90,37 +84,33 @@ app.use(passport.initialize());
 if (__DEV__) {
   app.enable('trust proxy');
 }
-app.get(
-  '/login/facebook',
-  passport.authenticate('facebook', {
-    scope: ['email', 'user_location'],
-    session: false,
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1); // trust first proxy
+}
+const RedisStore = connectRedis(session);
+app.use(
+  session({
+    store: new RedisStore({
+      client: redis,
+    }),
+    secret: config.sessionSecret,
+    resave: false,
+    saveUninitialized: true,
   }),
 );
-app.get(
-  '/login/facebook/return',
-  passport.authenticate('facebook', {
-    failureRedirect: '/login',
-    session: false,
-  }),
-  (req, res) => {
-    const expiresIn = 60 * 60 * 24 * 180; // 180 days
-    const token = jwt.sign(req.user, config.auth.jwt.secret, { expiresIn });
-    res.cookie('id_token', token, { maxAge: 1000 * expiresIn, httpOnly: true });
-    res.redirect('/');
-  },
-);
+
 app.get(
   '/login/wechat',
   (req, res, next) => {
-    req.session.next = req.headers.referer;
     next();
   },
   passport.authenticate('wechat'),
 );
+
 app.get(
   '/login/wechat/return',
   passport.authenticate('wechat', {
+    session: false,
     failureRedirect: '/login/wechat',
   }),
   (req, res) => {
@@ -204,6 +194,9 @@ app.get('*', async (req, res, next) => {
     });
 
     if (route.redirect) {
+      if (route.from) {
+        req.session.next = route.from;
+      }
       res.redirect(route.status || 302, route.redirect);
       return;
     }

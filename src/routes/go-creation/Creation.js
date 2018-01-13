@@ -37,9 +37,11 @@ class Creation extends React.Component {
   }
 
   submit() {
-    this.props.create(this.state.rule, this.state.boardsize).then(r => {
-      swal('Good job!', r.data.createGo.id, 'success');
-    });
+    this.props
+      .create(this.state.rule, this.state.boardsize, this.state.color)
+      .then(r => {
+        swal('Good job!', r.data.createGo.id, 'success');
+      });
   }
 
   render() {

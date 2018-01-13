@@ -24,6 +24,12 @@ const createGo = {
             boardsize: {
               type: new GraphQLNonNull(GraphQLInt),
             },
+            black: {
+              type: GraphQLString,
+            },
+            white: {
+              type: GraphQLString,
+            },
           },
         }),
       },
@@ -34,8 +40,9 @@ const createGo = {
     boardsize: {
       type: new GraphQLNonNull(GraphQLInt),
     },
+    color: { type: GraphQLString },
   },
-  resolve: (value, { rule, boardsize }) => {
+  resolve: (root, { rule, boardsize, color }) => {
     const id = Math.random()
       .toString(16)
       .split('.')[1];
@@ -45,6 +52,8 @@ const createGo = {
         rule,
         `info:${id}`,
         JSON.stringify({
+          black: color === 'black' ? root.request.user.id : null,
+          white: color === 'white' ? root.request.user.id : null,
           boardsize,
         }),
       )
@@ -53,6 +62,8 @@ const createGo = {
         engine: rule,
         info: {
           boardsize,
+          black: color === 'black' ? root.request.user.id : null,
+          white: color === 'white' ? root.request.user.id : null,
         },
       }));
   },

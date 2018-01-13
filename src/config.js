@@ -40,7 +40,7 @@ module.exports = {
 
   // Authentication
   auth: {
-    jwt: { secret: process.env.JWT_SECRET || 'React Starter Kit' },
+    jwt: { secret: process.env.JWT_SECRET || 'React Starter Kit!' },
 
     // https://developers.facebook.com/
     facebook: {
@@ -68,6 +68,8 @@ module.exports = {
 
   // Redis
   redis: process.env.REDIS || 'redis://localhost:6379',
+
+  sessionSecret: process.env.SESSION_SECRET || "It's a secret",
 
   wechat: {
     appId: 'wxc67a197c5c3f004e',

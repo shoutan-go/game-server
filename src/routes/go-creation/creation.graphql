@@ -1,5 +1,5 @@
-mutation createGo($rule: String!, $boardsize: Int!) {
-  createGo(rule: $rule, boardsize: $boardsize) {
+mutation createGo($rule: String!, $boardsize: Int!, $color: String) {
+  createGo(rule: $rule, boardsize: $boardsize, color: $color) {
     id
   }
 }

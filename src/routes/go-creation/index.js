@@ -7,12 +7,13 @@ import Layout from '../../components/Layout';
 import createGo from './creation.graphql';
 
 function action({ client }) {
-  const handleCreate = (rule, boardsize) =>
+  const handleCreate = (rule, boardsize, color) =>
     client.mutate({
       mutation: createGo,
       variables: {
         rule,
         boardsize,
+        color,
       },
     });
 
