@@ -1,71 +1,56 @@
 import {
-  GraphQLObjectType,
   GraphQLString,
   GraphQLNonNull,
   GraphQLInt,
+  GraphQLFloat,
 } from 'graphql';
+import GoType from '../types/GoType';
 
 import { redis } from '../../redis';
 
 const createGo = {
-  type: new GraphQLObjectType({
-    name: 'Go',
-    fields: {
-      id: {
-        type: new GraphQLNonNull(GraphQLString),
-      },
-      engine: {
-        type: new GraphQLNonNull(GraphQLString),
-      },
-      info: {
-        type: new GraphQLObjectType({
-          name: 'GoInfo',
-          fields: {
-            boardsize: {
-              type: new GraphQLNonNull(GraphQLInt),
-            },
-            black: {
-              type: GraphQLString,
-            },
-            white: {
-              type: GraphQLString,
-            },
-          },
-        }),
-      },
-    },
-  }),
+  type: GoType,
   args: {
     rule: { type: new GraphQLNonNull(GraphQLString) },
     boardsize: {
       type: new GraphQLNonNull(GraphQLInt),
     },
+    handicap: {
+      type: GraphQLInt,
+    },
+    komi: {
+      type: GraphQLFloat,
+    },
     color: { type: GraphQLString },
   },
-  resolve: (root, { rule, boardsize, color }) => {
+  resolve: (root, { rule, boardsize, handicap, komi, color }) => {
     const id = Math.random()
       .toString(16)
       .split('.')[1];
-    return redis
-      .msetAsync(
-        `engine:${id}`,
-        rule,
+    return Promise.all([
+      redis.setAsync(`engine:${id}`, rule),
+      redis.hmsetAsync(
         `info:${id}`,
-        JSON.stringify({
-          black: color === 'black' ? root.request.user.id : null,
-          white: color === 'white' ? root.request.user.id : null,
-          boardsize,
-        }),
-      )
-      .then(() => ({
-        id,
-        engine: rule,
-        info: {
-          boardsize,
-          black: color === 'black' ? root.request.user.id : null,
-          white: color === 'white' ? root.request.user.id : null,
-        },
-      }));
+        Object.assign(
+          {
+            boardsize,
+            handicap: handicap || 0,
+            komi: komi || 6.5,
+          },
+          color === 'black'
+            ? { black: root.request.user.id }
+            : { white: root.request.user.id },
+        ),
+      ),
+    ]).then(() => ({
+      id,
+      engine: rule,
+      info: {
+        boardsize,
+        black: color === 'black' ? root.request.user.id : null,
+        white: color === 'white' ? root.request.user.id : null,
+      },
+    }));
   },
 };
 

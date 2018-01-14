@@ -15,6 +15,7 @@ class BoardIntersection extends React.Component {
   static propTypes = {
     highlight: PropTypes.bool.isRequired,
     handleClick: PropTypes.func.isRequired,
+    temporary: PropTypes.number,
     color: PropTypes.number,
     row: PropTypes.number.isRequired,
     col: PropTypes.number.isRequired,
@@ -24,6 +25,7 @@ class BoardIntersection extends React.Component {
   static defaultProps = {
     color: 0,
     last: false,
+    temporary: null,
   };
 
   constructor(props) {
@@ -33,6 +35,7 @@ class BoardIntersection extends React.Component {
 
   render() {
     return (
+      // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
       <div
         data-offset-x={this.props.row}
         data-offset-y={this.props.col}
@@ -40,9 +43,14 @@ class BoardIntersection extends React.Component {
         className={cx({
           intersection: true,
           highlight: this.props.highlight,
-          black: this.props.color === GameEngine.Go.COLOR.BLACK,
-          white: this.props.color === GameEngine.Go.COLOR.WHITE,
+          black:
+            this.props.color === GameEngine.Go.COLOR.BLACK ||
+            this.props.temporary === GameEngine.Go.COLOR.BLACK,
+          white:
+            this.props.color === GameEngine.Go.COLOR.WHITE ||
+            this.props.temporary === GameEngine.Go.COLOR.WHITE,
           lastIntersection: this.props.last,
+          temporary: !!this.props.temporary,
         })}
       />
     );

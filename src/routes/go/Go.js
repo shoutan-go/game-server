@@ -7,6 +7,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import PropTypes from 'prop-types';
 import GameEngine from 'game-engine';
 import WebSocket from 'react-websocket';
+import swal from 'sweetalert2';
 
 import Info from './Info';
 import Board from './Board';
@@ -18,11 +19,11 @@ import s from './Go.css';
 class Go extends React.Component {
   static propTypes = {
     id: PropTypes.string.isRequired,
-    player: PropTypes.string,
+    user: PropTypes.string,
   };
 
   static defaultProps = {
-    player: null,
+    user: null,
   };
 
   constructor(props) {
@@ -30,22 +31,26 @@ class Go extends React.Component {
     this.state = {
       board: Array(19).fill(Array(19).fill(0)),
       black: {
+        id: '',
         name: '[BLACK]',
         avatar: null,
         captured: 0,
       },
       white: {
+        id: '',
         name: '[WHITE]',
         avatar: null,
         captured: 0,
       },
       turn: GameEngine.Go.COLOR.EMPTY,
-      color: 0,
+      color: GameEngine.Go.COLOR.EMPTY,
+      temporary: null,
       result: null,
     };
     this.engine = null;
     this.game.init = this.game.init.bind(this);
     this.game.append = this.game.append.bind(this);
+    this.game.result = this.game.result.bind(this);
 
     this.handler.pass = this.handler.pass.bind(this);
     this.handler.resign = this.handler.resign.bind(this);
@@ -58,6 +63,7 @@ class Go extends React.Component {
   game = {
     init: theGame => {
       this.engine = new GameEngine[theGame.engine](theGame.info, theGame.moves);
+      this.game.update();
     },
     append: move => {
       this.engine[move.type](
@@ -65,26 +71,60 @@ class Go extends React.Component {
         move.position && move.position[0],
         move.position && move.position[1],
       );
+      this.game.update();
+    },
+    result: r => {
+      swal('Good job!', r, 'success');
+    },
+    update: () => {
+      this.setState({
+        board: this.engine.board,
+        black: {
+          id: this.engine.info.black.id,
+          name: this.engine.info.black.name,
+          avatar: this.engine.info.black.avatar,
+          captured: this.engine.captured[GameEngine.Go.COLOR.BLACK],
+        },
+        white: {
+          id: this.engine.info.white.id,
+          name: this.engine.info.white.name,
+          avatar: this.engine.info.white.avatar,
+          captured: this.engine.captured[GameEngine.Go.COLOR.WHITE],
+        },
+        turn: this.engine.currentColor(),
+        result: this.engine.info.result,
+        color:
+          // eslint-disable-next-line no-nested-ternary
+          this.props.user === this.engine.info.black.id
+            ? GameEngine.Go.COLOR.BLACK
+            : this.props.user === this.engine.info.white.id
+              ? GameEngine.Go.COLOR.WHITE
+              : GameEngine.Go.COLOR.EMPTY,
+      });
     },
   };
 
   handler = {
     pass: () => {
       if (this.engine.currentColor() === this.state.color) {
-        this.engine.pass(this.state.color);
-        this.websocket.sendMessage({
-          color: this.state.color,
-          type: 'pass',
-        });
+        // this.engine.pass(this.state.color);
+        this.websocket.sendMessage(
+          JSON.stringify({
+            color: this.state.color,
+            type: 'pass',
+          }),
+        );
       }
     },
     resign: () => {
       if (this.engine.currentColor() === this.state.color) {
-        this.engine.resign(this.state.color);
-        this.websocket.sendMessage({
-          color: this.state.color,
-          type: 'resign',
-        });
+        // this.engine.resign(this.state.color);
+        this.websocket.sendMessage(
+          JSON.stringify({
+            color: this.state.color,
+            type: 'resign',
+          }),
+        );
       }
     },
     click: (i, j) => {
@@ -92,32 +132,48 @@ class Go extends React.Component {
         this.engine.currentColor() === this.state.color &&
         this.engine.rules(this.state.color, i, j)
       ) {
-        this.engine.play(this.state.color, i, j);
-        this.websocket.sendMessage({
-          color: this.state.color,
-          type: 'play',
-          position: [i, j],
+        this.setState({
+          temporary: {
+            color: this.state.color,
+            position: [i, j],
+          },
         });
       }
     },
-    confirm: () => {},
+    confirm: () => {
+      if (this.state.temporary) {
+        this.websocket.sendMessage(
+          JSON.stringify({
+            color: this.state.temporary.color,
+            type: 'play',
+            position: this.state.temporary.position,
+          }),
+        );
+        this.setState({
+          temporary: null,
+        });
+      }
+    },
   };
 
   connection = {
     message: msg => {
-      if (msg && msg.code === 'ok') {
-        switch (msg.type) {
+      const data = JSON.parse(msg);
+      if (data && data.code === 'ok') {
+        console.log(data);
+        switch (data.type) {
           case 'init':
-            this.game.init(msg.game);
+            this.game.init(data.game);
             break;
           case 'delta':
-            this.game.append(msg.move);
+            this.game.append(data.move);
+            break;
+          case 'result':
+            this.game.result(data.result);
             break;
           default:
             break;
         }
-      } else {
-        // console.log(`Error:${msg}`);
       }
     },
   };
@@ -143,13 +199,26 @@ class Go extends React.Component {
           white={this.state.white}
           turn={this.state.turn}
         />
-        {this.props.player ? (
-          <ConfirmButton handleConfirm={this.handler.confirm} disable={false} />
+        {this.props.user &&
+        (this.props.user === this.state.black.id ||
+          this.props.user === this.state.white.id) &&
+        !this.state.result ? (
+          <ConfirmButton
+            handleConfirm={this.handler.confirm}
+            disable={!this.state.temporary}
+          />
         ) : (
           <div />
         )}
-        <Board board={this.state.board} handleClick={this.handler.click} />
-        {this.props.player && !this.state.result ? (
+        <Board
+          board={this.state.board}
+          handleClick={this.handler.click}
+          temporary={this.state.temporary}
+        />
+        {this.props.user &&
+        (this.props.user === this.state.black.id ||
+          this.props.user === this.state.white.id) &&
+        !this.state.result ? (
           <div className={s.action}>
             <PassButton handlePass={this.handler.pass} />
             <ResignButton handleResign={this.handler.resign} />

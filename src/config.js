@@ -65,6 +65,8 @@ module.exports = {
         'KTZ6cxoKnEakQCeSpZlaUCJWGAlTEBJj0y2EMkUBujA7zWSvaQ',
     },
   },
+  // GNUGO
+  gnugo: process.env.GNUGO || 'http://127.0.0.1:5001/score/estimate',
 
   // Redis
   redis: process.env.REDIS || 'redis://localhost:6379',

@@ -9,10 +9,6 @@
   background-image: url('./goboard.jpg');
 }
 
-.highlight {
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
 .boardrow {
   flex-basis: 100%;
   display: flex;

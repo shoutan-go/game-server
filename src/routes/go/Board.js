@@ -17,11 +17,21 @@ class Board extends React.Component {
   static propTypes = {
     handleClick: PropTypes.func.isRequired,
     board: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
+    temporary: PropTypes.shape({
+      color: PropTypes.number.isRequired,
+      position: PropTypes.arrayOf(PropTypes.number).isRequired,
+    }),
+  };
+
+  static defaultProps = {
+    temporary: null,
   };
 
   constructor(props) {
     super(props);
     this.state = { highlight: [] };
+    this.handleHover = this.handleHover.bind(this);
+    this.handleHoverEnd = this.handleHoverEnd.bind(this);
   }
 
   handleHover(e) {
@@ -30,14 +40,13 @@ class Board extends React.Component {
     const target = document.elementFromPoint(clientX, clientY);
     this.setState({
       highlight: [
-        target.getAttribute('data-offset-x'),
-        target.getAttribute('data-offset-y'),
+        parseInt(target.getAttribute('data-offset-x'), 10),
+        parseInt(target.getAttribute('data-offset-y'), 10),
       ],
     });
   }
 
   handleHoverEnd(e) {
-    e.preventDefault();
     const { clientX, clientY } = e.changedTouches[0];
     const target = document.elementFromPoint(clientX, clientY);
     if (target.className.includes(inter.intersection)) {
@@ -56,7 +65,16 @@ class Board extends React.Component {
         row.push(
           <BoardIntersection
             key={j}
-            highlight={j === this.state.highlight[1]}
+            highlight={
+              j === this.state.highlight[1] || i === this.state.highlight[0]
+            }
+            temporary={
+              this.props.temporary &&
+              this.props.temporary.position[0] === i &&
+              this.props.temporary.position[1] === j
+                ? this.props.temporary.color
+                : null
+            }
             color={this.props.board[i][j]}
             row={i}
             col={j}
@@ -71,7 +89,6 @@ class Board extends React.Component {
         <div
           className={cx({
             boardrow: true,
-            highlight: i === this.state.highlight[0],
           })}
           key={i}
         >

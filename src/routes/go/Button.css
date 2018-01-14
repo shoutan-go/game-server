@@ -1,4 +1,4 @@
-button {
+.button {
   background: linear-gradient(#fff, #b7a3f1);
   width: 50%;
   height: 2.5em;
@@ -6,7 +6,7 @@ button {
   border-color: #000;
 }
 
-button:active {
+.button:active {
   background: linear-gradient(#b7a3f1, #fff);
 }
 

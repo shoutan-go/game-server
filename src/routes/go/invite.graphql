@@ -1,0 +1,5 @@
+mutation updateGo($id: String!, $color: String!) {
+  updateGo(id: $id, color: $color) {
+    id
+  }
+}

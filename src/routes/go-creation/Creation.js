@@ -20,7 +20,7 @@ class Creation extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      rule: 'normal',
+      rule: 'Go',
       boardsize: 19,
       color: 'black',
     };
@@ -29,6 +29,7 @@ class Creation extends React.Component {
 
   handler(id) {
     const self = this;
+    // eslint-disable-next-line func-names
     return function(event, index, value) {
       const newState = {};
       newState[id] = value;
@@ -40,6 +41,7 @@ class Creation extends React.Component {
     this.props
       .create(this.state.rule, this.state.boardsize, this.state.color)
       .then(r => {
+        console.log(r.data.createGo.id);
         swal('Good job!', r.data.createGo.id, 'success');
       });
   }
@@ -56,8 +58,8 @@ class Creation extends React.Component {
               value={this.state.rule}
               onChange={this.handler('rule')}
             >
-              <MenuItem value="normal" primaryText="普通" />
-              <MenuItem value="capture" primaryText="吃子棋" />
+              <MenuItem value="Go" primaryText="普通" />
+              <MenuItem value="CaptureGo" primaryText="吃子棋" />
             </SelectField>
             <br />
             <SelectField

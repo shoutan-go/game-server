@@ -43,7 +43,11 @@ class Html extends React.Component {
           <meta httpEquiv="x-ua-compatible" content="ie=edge" />
           <title>{title}</title>
           <meta name="description" content={description} />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale = 1.0, maximum-scale=1.0, user-scalable=no"
+          />
+          <meta name="apple-mobile-web-app-capable" content="yes" />
           {scripts.map(script => (
             <link key={script} rel="preload" href={script} as="script" />
           ))}
