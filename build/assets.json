@@ -1,0 +1,29 @@
+{
+  "go-creation": {
+    "js": "/assets/go-creation.chunk.js"
+  },
+  "go": {
+    "js": "/assets/go.chunk.js"
+  },
+  "home": {
+    "js": "/assets/home.chunk.js"
+  },
+  "about": {
+    "js": "/assets/about.chunk.js"
+  },
+  "not-found": {
+    "js": "/assets/not-found.chunk.js"
+  },
+  "login": {
+    "js": "/assets/login.chunk.js"
+  },
+  "admin": {
+    "js": "/assets/admin.chunk.js"
+  },
+  "client": {
+    "js": "/assets/client.js"
+  },
+  "vendor": {
+    "js": "/assets/vendor.js"
+  }
+}
