@@ -16,6 +16,7 @@ import normalizeCss from 'normalize.css';
 import s from './Layout.css';
 import Header from '../Header';
 import Footer from '../Footer';
+import Wechat from '../Wechat';
 
 class Layout extends React.Component {
   static propTypes = {
@@ -28,6 +29,7 @@ class Layout extends React.Component {
         <Header />
         {this.props.children}
         <Footer />
+        <Wechat />
       </div>
     );
   }

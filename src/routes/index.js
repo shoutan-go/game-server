@@ -58,7 +58,7 @@ const routes = {
     const route = await next();
 
     // Provide default values for title, description etc.
-    route.title = `${route.title || 'Untitled Page'} - shoutanwq.com`;
+    route.title = `${route.title || 'Untitled Page'} - 手谈围棋`;
     route.description = route.description || '';
 
     return route;

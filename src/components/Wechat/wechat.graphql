@@ -1,0 +1,8 @@
+query Wechat($url: String!) {
+  wechat(url: $url) {
+    appId
+    timestamp
+    nonceStr
+    signature
+  }
+}

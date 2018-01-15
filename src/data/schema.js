@@ -14,6 +14,7 @@ import {
 
 import me from './queries/me';
 import news from './queries/news';
+import wechat from './queries/wechat';
 
 import create from './mutations/create';
 import update from './mutations/update';
@@ -24,6 +25,7 @@ const schema = new Schema({
     fields: {
       me,
       news,
+      wechat,
     },
   }),
   mutation: new ObjectType({

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /**
  * React Starter Kit (https://www.reactstarterkit.com/)
  *
@@ -8,26 +9,30 @@
  */
 
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
+import wechatQuery from './wechat.graphql';
 
 class Wechat extends React.Component {
-  static propTypes = {
-    // appId: PropTypes.string.isRequired,
-    // timestamp: PropTypes.number.isRequired,
-    // nonceStr: PropTypes.string.isRequired,
-    // signature: PropTypes.string.isRequired,
+  static contextTypes = {
+    client: PropTypes.any.isRequired,
+    store: PropTypes.any.isRequired,
   };
-
   render() {
     if (typeof window !== 'undefined') {
-      // wx.config({
-      //   debug: false,
-      //   appId: this.props.appId,
-      //   timestamp: this.props.timestamp,
-      //   nonceStr: this.props.nonceStr,
-      //   signature: this.props.signature,
-      //   jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'],
-      // });
+      this.context.client
+        .query({
+          query: wechatQuery,
+          variables: {
+            url: window.location.href,
+          },
+        })
+        .then(resp => {
+          wx.config({
+            debug: false,
+            ...resp.data.wechat,
+            jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'],
+          });
+        });
     }
     return <div />;
   }

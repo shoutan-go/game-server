@@ -7926,9 +7926,9 @@ react-transition-group@^1.2.1:
     prop-types "^15.5.6"
     warning "^3.0.0"
 
-react-websocket@^2.0.0:
+"react-websocket@git+https://github.com/mehmetkose/react-websocket.git":
   version "2.0.0"
-  resolved "http://registry.npm.taobao.org/react-websocket/download/react-websocket-2.0.0.tgz#efc72f3e841ee1befe78efe634c9982fae16348a"
+  resolved "git+https://github.com/mehmetkose/react-websocket.git#16b393005460d942e941f460cb029a6b67c84ed9"
 
 react@^16.2.0:
   version "16.2.0"

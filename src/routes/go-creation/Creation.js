@@ -9,7 +9,6 @@ import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import swal from 'sweetalert2';
 import PropTypes from 'prop-types';
-// import GameEngine from 'game-engine';
 import s from './Creation.css';
 
 class Creation extends React.Component {
@@ -38,11 +37,51 @@ class Creation extends React.Component {
   }
 
   submit() {
+    const self = this;
     this.props
       .create(this.state.rule, this.state.boardsize, this.state.color)
       .then(r => {
-        console.log(r.data.createGo.id);
-        swal('Good job!', r.data.createGo.id, 'success');
+        swal({
+          type: 'success',
+          title: '对局创建成功！',
+          text: '点击右上角分享把对局请求发给对手',
+          showConfirmButton: false,
+          allowOutsideClick: false,
+          onOpen() {
+            swal.clickConfirm();
+          },
+          preConfirm() {
+            return new Promise(resolve => {
+              // eslint-disable-next-line no-undef
+              wx.onMenuShareTimeline({
+                title: `听说你围棋下的不错，我执${
+                  self.state.color === 'black' ? '黑' : '白'
+                }，来一局？`,
+                link: `${window.location.origin}/go?id=${
+                  r.data.createGo.id
+                }&invite=${self.state.color === 'black' ? 'white' : 'black'}`,
+                imgUrl: `http://wx.qlogo.cn/mmopen/jj4e65x0Px2ibxI8cBsLdxueOibCLrqHvg9U91Dvk0ohjQHgO2dias3LiaHazszmh0CJX4xhknnfwibqwDwWfCBaVPslgIcyBG81A/64`,
+                success: resolve,
+              });
+              // eslint-disable-next-line no-undef
+              wx.onMenuShareAppMessage({
+                title: `听说你围棋下的不错，我执${
+                  self.state.color === 'black' ? '黑' : '白'
+                }，来一局？`,
+                desc: `${self.state.boardsize}路，贴6.5目，让0子`,
+                link: `${window.location.origin}/go?id=${
+                  r.data.createGo.id
+                }&invite=${self.state.color === 'black' ? 'white' : 'black'}`,
+                imgUrl: `http://wx.qlogo.cn/mmopen/jj4e65x0Px2ibxI8cBsLdxueOibCLrqHvg9U91Dvk0ohjQHgO2dias3LiaHazszmh0CJX4xhknnfwibqwDwWfCBaVPslgIcyBG81A/64`,
+                success: resolve,
+              });
+            }).then(() => {
+              window.location.href = `${window.location.origin}/go?id=${
+                r.data.createGo.id
+              }`;
+            });
+          },
+        });
       });
   }
 

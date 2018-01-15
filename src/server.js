@@ -224,6 +224,7 @@ app.get('*', async (req, res, next) => {
     data.styles = [{ id: 'css', cssText: [...css].join('') }];
 
     data.scripts = [assets.vendor.js];
+    data.scripts.push('//res.wx.qq.com/open/js/jweixin-1.2.0.js');
     if (route.chunks) {
       data.scripts.push(...route.chunks.map(chunk => assets[chunk].js));
     }

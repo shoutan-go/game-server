@@ -8,12 +8,16 @@
  */
 
 import UniversalRouter from 'universal-router';
+import querystring from 'querystring';
 import routes from './routes';
 
 export default new UniversalRouter(routes, {
   resolveRoute(context, params) {
     if (context.route.protected && !context.store.getState().user) {
-      return { redirect: '/login/wechat', from: context.pathname };
+      return {
+        redirect: '/login/wechat',
+        from: `${context.pathname}?${querystring.stringify(context.query)}`,
+      };
     }
     if (typeof context.route.load === 'function') {
       return context.route
