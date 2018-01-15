@@ -9,6 +9,10 @@
   background: radial-gradient(#2e1f59, #16102b) !important;
 }
 
+.scoreboard {
+  color: white;
+}
+
 .container > div {
   margin-top: 8%;
 }

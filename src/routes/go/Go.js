@@ -7,7 +7,6 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import PropTypes from 'prop-types';
 import GameEngine from 'game-engine';
 import WebSocket from 'react-websocket';
-import swal from 'sweetalert2';
 
 import Info from './Info';
 import Board from './Board';
@@ -15,6 +14,8 @@ import ConfirmButton from './ConfirmButton';
 import PassButton from './PassButton';
 import ResignButton from './ResignButton';
 import s from './Go.css';
+
+const regex = new RegExp('^([B|W])\\+([\\d|R|\\.]+)');
 
 class Go extends React.Component {
   static propTypes = {
@@ -74,7 +75,9 @@ class Go extends React.Component {
       this.game.update();
     },
     result: r => {
-      swal('Good job!', r, 'success');
+      this.setState({
+        result: r,
+      });
     },
     update: () => {
       this.setState({
@@ -179,6 +182,7 @@ class Go extends React.Component {
   };
 
   render() {
+    const match = this.state.result ? this.state.result.match(regex) : null;
     return (
       <div className={s.container}>
         {typeof window !== 'undefined' ? (
@@ -208,7 +212,13 @@ class Go extends React.Component {
             disable={!this.state.temporary}
           />
         ) : (
-          <div />
+          <div className={s.scoreboard}>
+            {match
+              ? `${match[1] === 'W' ? '白' : '黑'}胜${
+                  match[2] === 'R' ? '，对方投降' : `${match[2]}目`
+                }`
+              : ''}
+          </div>
         )}
         <Board
           board={this.state.board}

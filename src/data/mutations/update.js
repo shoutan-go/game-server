@@ -12,9 +12,14 @@ const updateGo = {
   },
   resolve: (root, { id, color }) =>
     redis
-      .hgetAsync(`info:${id}`, color)
-      .then(r => {
-        if (!r && root.request.user) {
+      .hmgetAsync(`info:${id}`, color, 'black', 'white')
+      .then(([r, black, white]) => {
+        if (
+          !r &&
+          root.request.user &&
+          black !== root.request.user.id &&
+          white !== root.request.user.id
+        ) {
           return redis.hsetAsync(`info:${id}`, color, root.request.user.id);
         }
         return Promise.resolve(true);

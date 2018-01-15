@@ -76,9 +76,7 @@ export default function() {
                                 JSON.stringify({
                                   code: 'ok',
                                   type: 'result',
-                                  result: `${r[1] === 'W' ? '白' : '黑'}胜${
-                                    r[2]
-                                  }`,
+                                  result: `${r[1]}+${r[2]}`,
                                 }),
                               );
                             });
@@ -103,8 +101,8 @@ export default function() {
                           type: 'result',
                           result: `${
                             msg.color === GameEngine.Go.COLOR.BLACK
-                              ? '黑投降，白胜'
-                              : '白投降，黑胜'
+                              ? 'W+R'
+                              : 'B+R'
                           }`,
                         }),
                       );
