@@ -30,13 +30,28 @@ class BoardIntersection extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      style: {},
+    };
+  }
+
+  componentDidMount() {
+    // eslint-disable-next-line react/no-did-mount-set-state
+    this.setState({
+      style: {
+        height: this.divElement.clientHeight,
+      },
+    });
   }
 
   render() {
     return (
       // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
       <div
+        ref={divElement => {
+          this.divElement = divElement;
+        }}
+        style={this.state.style}
         data-offset-x={this.props.row}
         data-offset-y={this.props.col}
         onClick={this.props.handleClick}

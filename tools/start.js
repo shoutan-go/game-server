@@ -9,16 +9,15 @@
 
 import path from 'path';
 import express from 'express';
-import browserSync from 'browser-sync';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import errorOverlayMiddleware from 'react-dev-utils/errorOverlayMiddleware';
+import expressWs from 'express-ws';
 import webpackConfig from './webpack.config';
 import run, { format } from './run';
 import clean from './clean';
-
-const isDebug = !process.argv.includes('--release');
+import config from '../src/config';
 
 // https://webpack.js.org/configuration/watch/#watchoptions
 const watchOptions = {
@@ -66,6 +65,7 @@ let server;
 async function start() {
   if (server) return server;
   server = express();
+  expressWs(server);
   server.use(errorOverlayMiddleware());
   server.use(express.static(path.resolve(__dirname, '../public')));
 
@@ -218,20 +218,12 @@ async function start() {
   appPromiseIsResolved = true;
   appPromiseResolve();
 
-  // Launch the development server with Browsersync and HMR
-  await new Promise((resolve, reject) =>
-    browserSync.create().init(
-      {
-        // https://www.browsersync.io/docs/options
-        server: 'src/server.js',
-        middleware: [server],
-        open: !process.argv.includes('--silent'),
-        port: 80,
-        ...(isDebug ? {} : { notify: false, ui: false }),
-      },
-      (error, bs) => (error ? reject(error) : resolve(bs)),
-    ),
-  );
+  await new Promise(resolve => {
+    server.listen(config.port, () => {
+      console.info(`The server is running at http://localhost:${config.port}/`);
+      resolve();
+    });
+  });
 
   const timeEnd = new Date();
   const time = timeEnd.getTime() - timeStart.getTime();

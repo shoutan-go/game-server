@@ -3,6 +3,7 @@
 }
 
 .intersection::before {
+  opacity: 1;
   border-top: 1px #000 solid;
   content: '';
   z-index: -1;
@@ -17,6 +18,7 @@
 }
 
 .intersection::after {
+  opacity: 1;
   border-left: 1px #000 solid;
   content: ' ';
   z-index: -1;
@@ -31,6 +33,7 @@
 
 .black,
 .white {
+  background: no-repeat center/cover;
   border-radius: 50%;
 }
 
@@ -47,17 +50,19 @@
 }
 
 .black {
-  background: no-repeat center/cover;
   background-image: url('./black.png');
 }
 
 .white {
-  background: no-repeat center/cover;
   background-image: url('./white.png');
 }
 
-.temporary {
+.temporary.black {
+  background-image: url('./choose.png'), url('./black.png');
+}
 
+.temporary.white {
+  background-image: url('./choose.png'), url('./white.png');
 }
 
 .highlight {
