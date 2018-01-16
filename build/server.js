@@ -968,23 +968,24 @@ function () {
               state: context.store.getState(),
               apolloState: context.client.extract()
             };
+            data.hostname = req.hostname;
             html = __WEBPACK_IMPORTED_MODULE_13_react_dom_server___default.a.renderToStaticMarkup(__WEBPACK_IMPORTED_MODULE_12_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_20__components_Html__["a" /* default */], data));
             res.status(route.status || 200);
             res.send("<!doctype html>".concat(html));
-            _context.next = 39;
+            _context.next = 40;
             break;
 
-          case 36:
-            _context.prev = 36;
+          case 37:
+            _context.prev = 37;
             _context.t0 = _context["catch"](0);
             next(_context.t0);
 
-          case 39:
+          case 40:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, this, [[0, 36]]);
+    }, _callee, this, [[0, 37]]);
   }));
 
   return function (_x, _x2, _x3) {
@@ -1425,8 +1426,25 @@ function (_React$Component) {
   }
 
   _createClass(Html, [{
+    key: "assetsMap",
+    value: function assetsMap(asset) {
+      if (asset.startsWith('/assets/')) {
+        var domain = this.props.hostname.split('.');
+
+        if (domain[domain.length - 2]) {
+          return "//assets.".concat(domain[domain.length - 2], ".").concat(domain[domain.length - 1]).concat(asset);
+        }
+
+        return "//assets.".concat(domain[domain.length - 1]).concat(asset);
+      }
+
+      return asset;
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this = this;
+
       var _props = this.props,
           title = _props.title,
           description = _props.description,
@@ -1443,7 +1461,7 @@ function (_React$Component) {
       }), _ref3, _ref4, scripts.map(function (script) {
         return _jsx("link", {
           rel: "preload",
-          href: script,
+          href: _this.assetsMap(script),
           as: "script"
         }, script);
       }), _ref5, styles.map(function (style) {
@@ -1464,7 +1482,7 @@ function (_React$Component) {
         }
       }), scripts.map(function (script) {
         return _jsx("script", {
-          src: script
+          src: _this.assetsMap(script)
         }, script);
       }), __WEBPACK_IMPORTED_MODULE_3__config___default.a.analytics && __WEBPACK_IMPORTED_MODULE_3__config___default.a.analytics.googleTrackingId && _jsx("script", {
         dangerouslySetInnerHTML: {

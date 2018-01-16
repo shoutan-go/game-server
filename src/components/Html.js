@@ -27,12 +27,26 @@ class Html extends React.Component {
     scripts: PropTypes.arrayOf(PropTypes.string.isRequired),
     app: PropTypes.object, // eslint-disable-line
     children: PropTypes.string.isRequired,
+    hostname: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
     styles: [],
     scripts: [],
   };
+
+  assetsMap(asset) {
+    if (asset.startsWith('/assets/')) {
+      const domain = this.props.hostname.split('.');
+      if (domain[domain.length - 2]) {
+        return `//assets.${domain[domain.length - 2]}.${
+          domain[domain.length - 1]
+        }${asset}`;
+      }
+      return `//assets.${domain[domain.length - 1]}${asset}`;
+    }
+    return asset;
+  }
 
   render() {
     const { title, description, styles, scripts, app, children } = this.props;
@@ -49,7 +63,12 @@ class Html extends React.Component {
           />
           <meta name="apple-mobile-web-app-capable" content="yes" />
           {scripts.map(script => (
-            <link key={script} rel="preload" href={script} as="script" />
+            <link
+              key={script}
+              rel="preload"
+              href={this.assetsMap(script)}
+              as="script"
+            />
           ))}
           <link rel="apple-touch-icon" href="apple-touch-icon.png" />
           {styles.map(style => (
@@ -65,7 +84,9 @@ class Html extends React.Component {
           <script
             dangerouslySetInnerHTML={{ __html: `window.App=${serialize(app)}` }}
           />
-          {scripts.map(script => <script key={script} src={script} />)}
+          {scripts.map(script => (
+            <script key={script} src={this.assetsMap(script)} />
+          ))}
           {config.analytics &&
             config.analytics.googleTrackingId && (
               <script

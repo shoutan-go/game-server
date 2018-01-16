@@ -240,6 +240,7 @@ app.get('*', async (req, res, next) => {
       state: context.store.getState(),
       apolloState: context.client.extract(),
     };
+    data.hostname = req.hostname;
 
     const html = ReactDOM.renderToStaticMarkup(<Html {...data} />);
     res.status(route.status || 200);
