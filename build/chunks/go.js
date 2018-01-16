@@ -1374,8 +1374,9 @@ function (_React$Component) {
   }
 
   _createClass(BoardIntersection, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate() {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
         style: {
           height: this.divElement.clientHeight
