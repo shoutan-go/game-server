@@ -5,8 +5,9 @@ import React from 'react';
 import Go from './Go';
 import Layout from '../../components/Layout';
 import updateGo from './invite.graphql';
+import queryGo from './go.graphql';
 
-function action({ query: { id, invite }, store, client }) {
+async function action({ query: { id, invite }, store, client }) {
   if (invite === 'black' || invite === 'white') {
     client.mutate({
       mutation: updateGo,
@@ -16,12 +17,24 @@ function action({ query: { id, invite }, store, client }) {
       },
     });
   }
+
+  const { data } = await client.query({
+    query: queryGo,
+    variables: {
+      id,
+    },
+  });
+
   return {
     chunks: ['go'],
     title: '对局中',
     component: (
       <Layout>
-        <Go id={id} user={store.getState().user && store.getState().user.id} />
+        <Go
+          id={id}
+          boardsize={data.go.info.boardsize}
+          user={store.getState().user && store.getState().user.id}
+        />
       </Layout>
     ),
   };

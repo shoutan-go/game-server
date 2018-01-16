@@ -14,6 +14,7 @@ import {
 
 import me from './queries/me';
 import news from './queries/news';
+import go from './queries/go';
 import wechat from './queries/wechat';
 
 import create from './mutations/create';
@@ -24,6 +25,7 @@ const schema = new Schema({
     name: 'Query',
     fields: {
       me,
+      go,
       news,
       wechat,
     },

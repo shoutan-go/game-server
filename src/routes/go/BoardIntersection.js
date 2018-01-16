@@ -35,8 +35,8 @@ class BoardIntersection extends React.Component {
     };
   }
 
-  componentDidUpdate() {
-    // eslint-disable-next-line react/no-did-update-set-state
+  componentDidMount() {
+    // eslint-disable-next-line react/no-did-mount-set-state
     this.setState({
       style: {
         height: this.divElement.clientHeight,

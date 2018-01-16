@@ -1,0 +1,11 @@
+query Go($id: String!) {
+  go(id: $id) {
+    id,
+    engine,
+    info {
+      boardsize
+      black
+      white
+    }
+  }
+}

@@ -20,6 +20,7 @@ const regex = new RegExp('^([B|W])\\+([\\d|R|\\.]+)');
 class Go extends React.Component {
   static propTypes = {
     id: PropTypes.string.isRequired,
+    boardsize: PropTypes.number.isRequired,
     user: PropTypes.string,
   };
 
@@ -30,7 +31,9 @@ class Go extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      board: Array(19).fill(Array(19).fill(0)),
+      board: Array(this.props.boardsize).fill(
+        Array(this.props.boardsize).fill(0),
+      ),
       black: {
         id: '',
         name: '[BLACK]',
