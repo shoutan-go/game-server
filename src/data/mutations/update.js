@@ -67,6 +67,7 @@ const updateGo = {
                     engine,
                     moves: moves.map(JSON.parse),
                     info: {
+                      result: info.result,
                       boardsize: info.boardsize,
                       black: {
                         id: info.black,
