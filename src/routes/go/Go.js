@@ -9,11 +9,12 @@ import GameEngine from 'game-engine';
 import WebSocket from 'react-websocket';
 
 import Info from './Info';
-import Board from './Board';
 import ConfirmButton from './ConfirmButton';
 import PassButton from './PassButton';
 import ResignButton from './ResignButton';
 import s from './Go.css';
+
+import Layer from './layer/Layer';
 
 const regex = new RegExp('^([B|W])\\+([\\d|R|\\.]+)');
 
@@ -223,11 +224,7 @@ class Go extends React.Component {
               : ''}
           </div>
         )}
-        <Board
-          board={this.state.board}
-          handleClick={this.handler.click}
-          temporary={this.state.temporary}
-        />
+        <Layer boardsize={this.state.board.length} />
         {this.props.user &&
         (this.props.user === this.state.black.id ||
           this.props.user === this.state.white.id) &&

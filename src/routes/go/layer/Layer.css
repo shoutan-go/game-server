@@ -1,0 +1,5 @@
+.layers {
+  position: relative;
+  width: 85vw; /* 1:1 Aspect Ratio */
+  height: 85vw;
+}

@@ -1,0 +1,36 @@
+@import '../Intersection.css';
+
+.line::before {
+  opacity: 1;
+  border-top: 1px #000 solid;
+  content: '';
+  z-index: -1;
+  width: 100%;
+  display: block;
+  margin-top: 50%;
+  margin-left: 50%;
+}
+
+.line:last-child::before {
+  border-top: 1px rgba(0, 0, 0, 0) solid;
+}
+
+.line::after {
+  opacity: 1;
+  border-left: 1px #000 solid;
+  content: ' ';
+  z-index: -1;
+  height: 100%;
+  display: block;
+  margin-left: 50%;
+}
+
+.star {
+  border-radius: 50%;
+  background: radial-gradient(black 20%, transparent 20%);
+  background-position: 1px 1px;
+}
+
+.lastLine::after {
+  border-left: 0;
+}

@@ -27,16 +27,17 @@ class Html extends React.Component {
     scripts: PropTypes.arrayOf(PropTypes.string.isRequired),
     app: PropTypes.object, // eslint-disable-line
     children: PropTypes.string.isRequired,
-    hostname: PropTypes.string.isRequired,
+    hostname: PropTypes.string,
   };
 
   static defaultProps = {
     styles: [],
     scripts: [],
+    hostname: null,
   };
 
   assetsMap(asset) {
-    if (asset.startsWith('/assets/')) {
+    if (asset.startsWith('/assets/') && this.props.hostname) {
       const domain = this.props.hostname.split('.');
       if (domain[domain.length - 2]) {
         return `//assets.${domain[domain.length - 2]}.${

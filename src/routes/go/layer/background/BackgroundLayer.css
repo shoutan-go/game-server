@@ -1,0 +1,5 @@
+@import '../BoardLayer.css';
+
+.background {
+  background-image: url('../../goboard.jpg');
+}
