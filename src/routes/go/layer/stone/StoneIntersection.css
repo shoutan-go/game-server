@@ -1,0 +1,35 @@
+@import '../Intersection.css';
+
+.black,
+.white {
+  background: no-repeat center/cover;
+  border-radius: 50%;
+}
+
+.black::before,
+.white::before {
+  width: 50%;
+  margin-left: 100%;
+}
+
+.black::after,
+.white::after {
+  height: 58%;
+  margin-top: 42%;
+}
+
+.black {
+  background-image: url('./black.png');
+}
+
+.white {
+  background-image: url('./white.png');
+}
+
+.temporary.black {
+  background-image: url('./choose.png'), url('./black.png');
+}
+
+.temporary.white {
+  background-image: url('./choose.png'), url('./white.png');
+}

@@ -50,19 +50,19 @@
 }
 
 .black {
-  background-image: url('./black.png');
+  background-image: url('layer/stone/black.png');
 }
 
 .white {
-  background-image: url('./white.png');
+  background-image: url('layer/stone/white.png');
 }
 
 .temporary.black {
-  background-image: url('./choose.png'), url('./black.png');
+  background-image: url('layer/stone/choose.png'), url('layer/stone/black.png');
 }
 
 .temporary.white {
-  background-image: url('./choose.png'), url('./white.png');
+  background-image: url('layer/stone/choose.png'), url('layer/stone/white.png');
 }
 
 .highlight {

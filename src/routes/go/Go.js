@@ -32,6 +32,9 @@ class Go extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      boardMoves: Array(this.props.boardsize).fill(
+        Array(this.props.boardsize).fill(0),
+      ),
       board: Array(this.props.boardsize).fill(
         Array(this.props.boardsize).fill(0),
       ),
@@ -85,6 +88,7 @@ class Go extends React.Component {
     },
     update: () => {
       this.setState({
+        boardMoves: this.engine.boardMoves,
         board: this.engine.board,
         black: {
           id: this.engine.info.black.id,
@@ -167,7 +171,6 @@ class Go extends React.Component {
     message: msg => {
       const data = JSON.parse(msg);
       if (data && data.code === 'ok') {
-        console.log(data);
         switch (data.type) {
           case 'init':
             this.game.init(data.game);
@@ -189,19 +192,6 @@ class Go extends React.Component {
     const match = this.state.result ? this.state.result.match(regex) : null;
     return (
       <div className={s.container}>
-        {typeof window !== 'undefined' ? (
-          <WebSocket
-            onMessage={this.connection.message}
-            url={`ws://${window.location.host}/channel/${this.props.id}`}
-            reconnectIntervalInMilliSeconds={100}
-            ref={Websocket => {
-              this.websocket = Websocket;
-            }}
-          />
-        ) : (
-          <div />
-        )}
-
         <Info
           black={this.state.black}
           white={this.state.white}
@@ -224,7 +214,12 @@ class Go extends React.Component {
               : ''}
           </div>
         )}
-        <Layer boardsize={this.state.board.length} />
+        <Layer
+          moves={this.state.boardMoves}
+          board={this.state.board}
+          handleClick={this.handler.click}
+          temporary={this.state.temporary}
+        />
         {this.props.user &&
         (this.props.user === this.state.black.id ||
           this.props.user === this.state.white.id) &&
@@ -233,6 +228,18 @@ class Go extends React.Component {
             <PassButton handlePass={this.handler.pass} />
             <ResignButton handleResign={this.handler.resign} />
           </div>
+        ) : (
+          <div />
+        )}
+        {typeof window !== 'undefined' ? (
+          <WebSocket
+            onMessage={this.connection.message}
+            url={`ws://${window.location.host}/channel/${this.props.id}`}
+            reconnectIntervalInMilliSeconds={100}
+            ref={Websocket => {
+              this.websocket = Websocket;
+            }}
+          />
         ) : (
           <div />
         )}

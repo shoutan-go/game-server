@@ -41,15 +41,18 @@ const wechat = {
                   }&secret=${config.wechat.appSecret}`,
                 )
                   .then(response => response.json())
-                  .then(json =>
-                    redis
-                      .setexAsync(
-                        'wechat_accessToken',
-                        json.expires_in,
-                        json.access_token,
-                      )
-                      .then(() => json.access_token),
-                  );
+                  .then(json => {
+                    if (json.errcode && json.errcode === 0) {
+                      return redis
+                        .setexAsync(
+                          'wechat_accessToken',
+                          json.expires_in,
+                          json.access_token,
+                        )
+                        .then(() => json.access_token);
+                    }
+                    throw json;
+                  });
               }
               return accessToken;
             })
@@ -58,11 +61,14 @@ const wechat = {
                 `https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=${accessToken}&type=jsapi`,
               )
                 .then(response => response.json())
-                .then(json =>
-                  redis
-                    .setexAsync('jsapi_ticket', json.expires_in, json.ticket)
-                    .then(() => json.ticket),
-                ),
+                .then(json => {
+                  if (json.errcode && json.errcode === 0) {
+                    return redis
+                      .setexAsync('jsapi_ticket', json.expires_in, json.ticket)
+                      .then(() => json.ticket);
+                  }
+                  throw json;
+                }),
             );
         }
         return ticket;
@@ -81,6 +87,16 @@ const wechat = {
           timestamp,
           nonceStr: noncestr,
           signature,
+        };
+      })
+      .catch(e => {
+        const noncestr = Math.random().toString();
+        const timestamp = Math.floor(new Date().getTime() / 1000);
+        return {
+          appId: config.wechat.appId,
+          timestamp,
+          nonceStr: noncestr,
+          signature: e.errmsg || e.errcode || 'error',
         };
       });
   },
