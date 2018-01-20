@@ -25,6 +25,7 @@ import { getDataFromTree } from 'react-apollo';
 import PrettyError from 'pretty-error';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import compression from 'compression';
 import createApolloClient from './core/createApolloClient';
 import App from './components/App';
 import Html from './components/Html';
@@ -54,6 +55,7 @@ global.navigator.userAgent = global.navigator.userAgent || 'all';
 //
 // Register Node.js middleware
 // -----------------------------------------------------------------------------
+app.use(compression());
 app.use(
   express.static(path.resolve(__dirname, 'public'), {
     maxAge: __DEV__ ? 0 : '1y',
