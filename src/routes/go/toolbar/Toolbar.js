@@ -95,7 +95,7 @@ class Toolbar extends React.Component {
       );
     }
     return (
-      <div className={s.toolbar}>
+      <div className={s.buttonGroup}>
         <button
           type="button"
           onClick={this.props.handlePass}

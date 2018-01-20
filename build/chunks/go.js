@@ -1388,7 +1388,7 @@ function (_React$Component) {
       }
 
       return _jsx("div", {
-        className: __WEBPACK_IMPORTED_MODULE_5__Toolbar_css___default.a.toolbar
+        className: __WEBPACK_IMPORTED_MODULE_5__Toolbar_css___default.a.buttonGroup
       }, void 0, _jsx("button", {
         type: "button",
         onClick: this.props.handlePass,
