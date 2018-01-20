@@ -51,7 +51,7 @@ class MoveIntersection extends React.Component {
       >
         <div
           style={{
-            transform: `translateY(-30%) scale(calc(1.6 - ${this.props
+            transform: `translateY(-50%) scale(calc(1.6 - ${this.props
               .boardsize / 20}))`,
           }}
           className={cx({

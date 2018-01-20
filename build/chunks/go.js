@@ -2926,7 +2926,7 @@ function (_React$Component) {
         })
       }, _jsx("div", {
         style: {
-          transform: "translateY(-30%) scale(calc(1.6 - ".concat(this.props.boardsize / 20, "))")
+          transform: "translateY(-50%) scale(calc(1.6 - ".concat(this.props.boardsize / 20, "))")
         },
         className: cx({
           number: true,
