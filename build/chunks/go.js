@@ -2918,15 +2918,16 @@ function (_React$Component) {
         ref: function ref(element) {
           _this2.element = element;
         },
-        style: Object.assign({}, this.state.style, {
-          transform: "translateY(-30%) scale(calc(1.6 - ".concat(this.props.boardsize / 20, "))")
-        }),
+        style: this.state.style,
         "data-offset-x": this.props.row,
         "data-offset-y": this.props.col,
         className: cx({
           intersection: true
         })
       }, _jsx("div", {
+        style: {
+          transform: "translateY(-30%) scale(calc(1.6 - ".concat(this.props.boardsize / 20, "))")
+        },
         className: cx({
           number: true,
           black: this.props.stone === __WEBPACK_IMPORTED_MODULE_4_game_engine___default.a.Go.COLOR.WHITE,

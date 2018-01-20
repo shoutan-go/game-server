@@ -42,10 +42,7 @@ class MoveIntersection extends React.Component {
         ref={element => {
           this.element = element;
         }}
-        style={Object.assign({}, this.state.style, {
-          transform: `translateY(-30%) scale(calc(1.6 - ${this.props.boardsize /
-            20}))`,
-        })}
+        style={this.state.style}
         data-offset-x={this.props.row}
         data-offset-y={this.props.col}
         className={cx({
@@ -53,6 +50,10 @@ class MoveIntersection extends React.Component {
         })}
       >
         <div
+          style={{
+            transform: `translateY(-30%) scale(calc(1.6 - ${this.props
+              .boardsize / 20}))`,
+          }}
           className={cx({
             number: true,
             black: this.props.stone === GameEngine.Go.COLOR.WHITE,
