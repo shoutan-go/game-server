@@ -755,7 +755,9 @@ global.navigator.userAgent = global.navigator.userAgent || 'all'; //
 // Register Node.js middleware
 // -----------------------------------------------------------------------------
 
-app.use(__WEBPACK_IMPORTED_MODULE_2_express___default.a.static(__WEBPACK_IMPORTED_MODULE_0_path___default.a.resolve(__dirname, 'public')));
+app.use(__WEBPACK_IMPORTED_MODULE_2_express___default.a.static(__WEBPACK_IMPORTED_MODULE_0_path___default.a.resolve(__dirname, 'public'), {
+  maxAge:  false ? 0 : '1y'
+}));
 app.use(__WEBPACK_IMPORTED_MODULE_6_cookie_parser___default()());
 app.use(__WEBPACK_IMPORTED_MODULE_7_body_parser___default.a.urlencoded({
   extended: true
