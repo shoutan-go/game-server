@@ -2919,7 +2919,7 @@ function (_React$Component) {
           _this2.element = element;
         },
         style: Object.assign({}, this.state.style, {
-          transform: "translateY(-50%) scale(calc(1.6 - ".concat(this.props.boardsize / 20, "))")
+          transform: "translateY(-30%) scale(calc(1.6 - ".concat(this.props.boardsize / 20, "))")
         }),
         "data-offset-x": this.props.row,
         "data-offset-y": this.props.col,

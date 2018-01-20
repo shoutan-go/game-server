@@ -42,7 +42,7 @@ const wechat = {
                 )
                   .then(response => response.json())
                   .then(json => {
-                    if (json.errcode && json.errcode === 0) {
+                    if (!json.errcode || json.errcode === 0) {
                       return redis
                         .setexAsync(
                           'wechat_accessToken',

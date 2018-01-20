@@ -2734,7 +2734,7 @@ var wechat = {
             return __WEBPACK_IMPORTED_MODULE_0_node_fetch___default()("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".concat(__WEBPACK_IMPORTED_MODULE_5__config___default.a.wechat.appId, "&secret=").concat(__WEBPACK_IMPORTED_MODULE_5__config___default.a.wechat.appSecret)).then(function (response) {
               return response.json();
             }).then(function (json) {
-              if (json.errcode && json.errcode === 0) {
+              if (!json.errcode || json.errcode === 0) {
                 return __WEBPACK_IMPORTED_MODULE_6__redis__["a" /* redis */].setexAsync('wechat_accessToken', json.expires_in, json.access_token).then(function () {
                   return json.access_token;
                 });

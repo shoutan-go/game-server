@@ -43,7 +43,7 @@ class MoveIntersection extends React.Component {
           this.element = element;
         }}
         style={Object.assign({}, this.state.style, {
-          transform: `translateY(-50%) scale(calc(1.6 - ${this.props.boardsize /
+          transform: `translateY(-30%) scale(calc(1.6 - ${this.props.boardsize /
             20}))`,
         })}
         data-offset-x={this.props.row}
