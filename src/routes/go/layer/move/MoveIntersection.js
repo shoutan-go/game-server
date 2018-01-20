@@ -20,7 +20,7 @@ class MoveIntersection extends React.Component {
     boardsize: PropTypes.number.isRequired,
   };
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       style: {},
@@ -39,21 +39,20 @@ class MoveIntersection extends React.Component {
   render() {
     return (
       <div
+        ref={element => {
+          this.element = element;
+        }}
+        style={Object.assign({}, this.state.style, {
+          transform: `translateY(-50%) scale(calc(1.6 - ${this.props.boardsize /
+            20}))`,
+        })}
         data-offset-x={this.props.row}
         data-offset-y={this.props.col}
-        style={this.state.style}
         className={cx({
           intersection: true,
         })}
       >
         <div
-          ref={element => {
-            this.element = element;
-          }}
-          style={{
-            transform: `translateY(-50%) scale(calc(1.6 - ${this.props
-              .boardsize / 20}))`,
-          }}
           className={cx({
             number: true,
             black: this.props.stone === GameEngine.Go.COLOR.WHITE,

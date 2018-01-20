@@ -2914,26 +2914,25 @@ function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
-      return _jsx("div", {
-        "data-offset-x": this.props.row,
-        "data-offset-y": this.props.col,
-        style: this.state.style,
-        className: cx({
-          intersection: true
-        })
-      }, void 0, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+      return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         ref: function ref(element) {
           _this2.element = element;
         },
-        style: {
+        style: Object.assign({}, this.state.style, {
           transform: "translateY(-50%) scale(calc(1.6 - ".concat(this.props.boardsize / 20, "))")
-        },
+        }),
+        "data-offset-x": this.props.row,
+        "data-offset-y": this.props.col,
+        className: cx({
+          intersection: true
+        })
+      }, _jsx("div", {
         className: cx({
           number: true,
           black: this.props.stone === __WEBPACK_IMPORTED_MODULE_4_game_engine___default.a.Go.COLOR.WHITE,
           white: this.props.stone === __WEBPACK_IMPORTED_MODULE_4_game_engine___default.a.Go.COLOR.BLACK
         })
-      }, this.props.value !== 0 ? this.props.value : ''));
+      }, void 0, this.props.value !== 0 ? this.props.value : ''));
     }
   }]);
 
