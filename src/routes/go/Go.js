@@ -113,7 +113,7 @@ class Go extends React.Component {
           captured: this.controledEngine().captured[GameEngine.Go.COLOR.WHITE],
         },
         turn: this.controledEngine().currentColor(),
-        result: this.engine.info.result,
+        result: this.state.result || this.engine.info.result,
         game: {
           boardMoves: this.controledEngine().boardMoves,
           board: this.controledEngine().board,

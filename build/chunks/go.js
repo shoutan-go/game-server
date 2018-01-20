@@ -867,7 +867,7 @@ function (_React$Component) {
               captured: _this.controledEngine().captured[__WEBPACK_IMPORTED_MODULE_4_game_engine___default.a.Go.COLOR.WHITE]
             },
             turn: _this.controledEngine().currentColor(),
-            result: _this.engine.info.result,
+            result: _this.state.result || _this.engine.info.result,
             game: {
               boardMoves: _this.controledEngine().boardMoves,
               board: _this.controledEngine().board,
@@ -1634,7 +1634,7 @@ exports = module.exports = __webpack_require__(17)(false);
 
 
 // module
-exports.push([module.i, ".r_vGR{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-wrap:nowrap;flex-wrap:nowrap;-ms-flex-pack:start;justify-content:flex-start;-ms-flex-align:center;align-items:center;padding:0 6%;height:100vh;background:-webkit-radial-gradient(#2e1f59,#16102b)!important;background:-o-radial-gradient(#2e1f59,#16102b)!important;background:radial-gradient(#2e1f59,#16102b)!important}.r_vGR>div{margin-top:8%}._3lFG9{color:#fff;margin-top:0!important}", ""]);
+exports.push([module.i, ".r_vGR{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-wrap:nowrap;flex-wrap:nowrap;-ms-flex-pack:start;justify-content:flex-start;-ms-flex-align:center;align-items:center;padding:0 6%;height:100vh;background:-webkit-radial-gradient(#2e1f59,#16102b)!important;background:-o-radial-gradient(#2e1f59,#16102b)!important;background:radial-gradient(#2e1f59,#16102b)!important}.r_vGR>div{margin-top:4%}._3lFG9{color:#fff;margin-top:0!important}", ""]);
 
 // exports
 exports.locals = {
@@ -3033,6 +3033,7 @@ function (_React$Component) {
       var _this2 = this;
 
       return function (e) {
+        e.preventDefault();
         var _e$changedTouches$ = e.changedTouches[0],
             clientX = _e$changedTouches$.clientX,
             clientY = _e$changedTouches$.clientY;

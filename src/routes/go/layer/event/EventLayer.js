@@ -38,6 +38,7 @@ class EventLayer extends React.Component {
 
   handler(event) {
     return e => {
+      e.preventDefault();
       const { clientX, clientY } = e.changedTouches[0];
       const target = document.elementFromPoint(clientX, clientY);
       this.props[event](
