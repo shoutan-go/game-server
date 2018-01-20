@@ -42,7 +42,7 @@ const wechat = {
                 )
                   .then(response => response.json())
                   .then(json => {
-                    if (!json.errcode || json.errcode === 0) {
+                    if (!('errcode' in json) || json.errcode === 0) {
                       return redis
                         .setexAsync(
                           'wechat_accessToken',
@@ -62,7 +62,7 @@ const wechat = {
               )
                 .then(response => response.json())
                 .then(json => {
-                  if (json.errcode && json.errcode === 0) {
+                  if ('errcode' in json && json.errcode === 0) {
                     return redis
                       .setexAsync('jsapi_ticket', json.expires_in, json.ticket)
                       .then(() => json.ticket);
