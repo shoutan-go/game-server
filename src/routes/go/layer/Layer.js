@@ -18,6 +18,7 @@ class Layer extends React.Component {
     handleClick: PropTypes.func.isRequired,
     board: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
     moves: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
+    showMoves: PropTypes.bool,
     temporary: PropTypes.shape({
       color: PropTypes.number.isRequired,
       position: PropTypes.arrayOf(PropTypes.number).isRequired,
@@ -26,6 +27,7 @@ class Layer extends React.Component {
 
   static defaultProps = {
     temporary: null,
+    showMoves: false,
   };
 
   constructor(props) {
@@ -75,11 +77,13 @@ class Layer extends React.Component {
           handleClick={this.props.handleClick}
           temporary={this.props.temporary}
         />
-        <MoveLayer
-          boardsize={this.props.board.length}
-          board={this.props.board}
-          moves={this.props.moves}
-        />
+        {this.props.showMoves && (
+          <MoveLayer
+            boardsize={this.props.board.length}
+            board={this.props.board}
+            moves={this.props.moves}
+          />
+        )}
         <EventLayer
           boardsize={this.props.board.length}
           click={this.handler('click')}

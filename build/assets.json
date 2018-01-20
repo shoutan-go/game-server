@@ -1,0 +1,29 @@
+{
+  "go-creation": {
+    "js": "/assets/go-creation.61a94504.chunk.js"
+  },
+  "go": {
+    "js": "/assets/go.23664e72.chunk.js"
+  },
+  "home": {
+    "js": "/assets/home.8c698b03.chunk.js"
+  },
+  "about": {
+    "js": "/assets/about.1a22f35c.chunk.js"
+  },
+  "not-found": {
+    "js": "/assets/not-found.cdc4c1f1.chunk.js"
+  },
+  "login": {
+    "js": "/assets/login.441a129d.chunk.js"
+  },
+  "admin": {
+    "js": "/assets/admin.42ee7d01.chunk.js"
+  },
+  "client": {
+    "js": "/assets/client.7543957b.js"
+  },
+  "vendor": {
+    "js": "/assets/vendor.87e4e034.js"
+  }
+}

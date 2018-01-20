@@ -9,29 +9,11 @@
   background: radial-gradient(#2e1f59, #16102b) !important;
 }
 
-.scoreboard {
-  color: white;
-}
-
 .container > div {
   margin-top: 8%;
 }
 
-.action {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin-bottom: 8%;
-}
-
-.action > button:first-child {
-  -webkit-border-radius: 8px 0 0 8px;
-  -moz-border-radius: 8px 0 0 8px;
-  border-radius: 8px 0 0 8px;
-}
-
-.action > button:last-child {
-  -webkit-border-radius: 0 8px 8px 0;
-  -moz-border-radius: 0 8px 8px 0;
-  border-radius: 0 8px 8px 0;
+.scoreboard {
+  color: white;
+  margin-top: 0 !important;
 }

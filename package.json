@@ -51,6 +51,7 @@
     "react": "^16.2.0",
     "react-apollo": "^2.0.4",
     "react-dom": "^16.2.0",
+    "react-rangeslider": "^2.2.0",
     "react-redux": "^5.0.6",
     "react-websocket": "git+https://github.com/mehmetkose/react-websocket.git",
     "redis": "^2.8.0",

@@ -1,0 +1,28 @@
+@import 'rangeslider.css';
+@import '../Button.css';
+
+.toolbar {
+  width: 100%;
+  height: 15vw;
+  display: flex;
+  flex-direction: column;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 8%;
+}
+
+.buttonGroup > button:first-child {
+  -webkit-border-radius: 8px 0 0 8px;
+  -moz-border-radius: 8px 0 0 8px;
+  border-radius: 8px 0 0 8px;
+}
+
+.buttonGroup > button:last-child {
+  -webkit-border-radius: 0 8px 8px 0;
+  -moz-border-radius: 0 8px 8px 0;
+  border-radius: 0 8px 8px 0;
+}

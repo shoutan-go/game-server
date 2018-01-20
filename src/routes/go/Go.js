@@ -9,9 +9,8 @@ import GameEngine from 'game-engine';
 import WebSocket from 'react-websocket';
 
 import Info from './Info';
+import Toolbar from './toolbar/Toolbar';
 import ConfirmButton from './ConfirmButton';
-import PassButton from './PassButton';
-import ResignButton from './ResignButton';
 import s from './Go.css';
 
 import Layer from './layer/Layer';
@@ -32,12 +31,6 @@ class Go extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      boardMoves: Array(this.props.boardsize).fill(
-        Array(this.props.boardsize).fill(0),
-      ),
-      board: Array(this.props.boardsize).fill(
-        Array(this.props.boardsize).fill(0),
-      ),
       black: {
         id: '',
         name: '[BLACK]',
@@ -54,23 +47,42 @@ class Go extends React.Component {
       color: GameEngine.Go.COLOR.EMPTY,
       temporary: null,
       result: null,
+      game: {
+        maxMoves: 0,
+        boardMoves: Array(this.props.boardsize).fill(
+          Array(this.props.boardsize).fill(0),
+        ),
+        board: Array(this.props.boardsize).fill(
+          Array(this.props.boardsize).fill(0),
+        ),
+      },
+      control: {
+        showMoves: false,
+      },
     };
     this.engine = null;
     this.game.init = this.game.init.bind(this);
     this.game.append = this.game.append.bind(this);
     this.game.result = this.game.result.bind(this);
 
-    this.handler.pass = this.handler.pass.bind(this);
+    this.handler.changeMoves = this.handler.changeMoves.bind(this);
+    this.handler.toggleMoves = this.handler.toggleMoves.bind(this);
     this.handler.resign = this.handler.resign.bind(this);
     this.handler.click = this.handler.click.bind(this);
     this.handler.confirm = this.handler.confirm.bind(this);
 
     this.connection.message = this.connection.message.bind(this);
+    this.controledEngine = this.controledEngine.bind(this);
+  }
+
+  controledEngine() {
+    return this.engine;
   }
 
   game = {
     init: theGame => {
       this.engine = new GameEngine[theGame.engine](theGame.info, theGame.moves);
+      this.engine.type = theGame.engine;
       this.game.update();
     },
     append: move => {
@@ -88,22 +100,25 @@ class Go extends React.Component {
     },
     update: () => {
       this.setState({
-        boardMoves: this.engine.boardMoves,
-        board: this.engine.board,
         black: {
           id: this.engine.info.black.id,
           name: this.engine.info.black.name,
           avatar: this.engine.info.black.avatar,
-          captured: this.engine.captured[GameEngine.Go.COLOR.BLACK],
+          captured: this.controledEngine().captured[GameEngine.Go.COLOR.BLACK],
         },
         white: {
           id: this.engine.info.white.id,
           name: this.engine.info.white.name,
           avatar: this.engine.info.white.avatar,
-          captured: this.engine.captured[GameEngine.Go.COLOR.WHITE],
+          captured: this.controledEngine().captured[GameEngine.Go.COLOR.WHITE],
         },
-        turn: this.engine.currentColor(),
+        turn: this.controledEngine().currentColor(),
         result: this.engine.info.result,
+        game: {
+          boardMoves: this.controledEngine().boardMoves,
+          board: this.controledEngine().board,
+          maxMoves: this.engine.moves.length,
+        },
         color:
           // eslint-disable-next-line no-nested-ternary
           this.props.user === this.engine.info.black.id
@@ -116,6 +131,28 @@ class Go extends React.Component {
   };
 
   handler = {
+    changeMoves: async move => {
+      if (move === this.engine.moves.length) {
+        this.controledEngine = () => this.engine;
+      } else {
+        this.controledEngine = () => {
+          const controledEngine = new GameEngine[this.engine.type](
+            this.engine.info,
+            this.engine.moves.slice(0, move),
+          );
+          return controledEngine;
+        };
+      }
+      this.controledEngine = this.controledEngine.bind(this);
+      this.game.update();
+    },
+    toggleMoves: () => {
+      this.setState({
+        control: Object.assign({}, this.state.control, {
+          showMoves: !this.state.control.showMoves,
+        }),
+      });
+    },
     pass: () => {
       if (this.engine.currentColor() === this.state.color) {
         // this.engine.pass(this.state.color);
@@ -215,22 +252,27 @@ class Go extends React.Component {
           </div>
         )}
         <Layer
-          moves={this.state.boardMoves}
-          board={this.state.board}
+          moves={this.state.game.boardMoves}
+          board={this.state.game.board}
           handleClick={this.handler.click}
+          showMoves={this.state.control.showMoves}
           temporary={this.state.temporary}
         />
-        {this.props.user &&
-        (this.props.user === this.state.black.id ||
-          this.props.user === this.state.white.id) &&
-        !this.state.result ? (
-          <div className={s.action}>
-            <PassButton handlePass={this.handler.pass} />
-            <ResignButton handleResign={this.handler.resign} />
-          </div>
-        ) : (
-          <div />
-        )}
+        <Toolbar
+          observer={
+            !(
+              this.props.user &&
+              (this.props.user === this.state.black.id ||
+                this.props.user === this.state.white.id) &&
+              !this.state.result
+            )
+          }
+          maxMoves={this.state.game.maxMoves}
+          handlePass={this.handler.pass}
+          handleResign={this.handler.resign}
+          changeMoves={this.handler.changeMoves}
+          toggleMoves={this.handler.toggleMoves}
+        />
         {typeof window !== 'undefined' ? (
           <WebSocket
             onMessage={this.connection.message}
