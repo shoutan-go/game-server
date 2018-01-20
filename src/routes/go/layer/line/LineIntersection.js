@@ -18,9 +18,29 @@ class LineIntersection extends React.Component {
     }).isRequired,
   };
 
+  constructor(props){
+    super(props);
+    this.state = {
+      style: {},
+    };
+  }
+
+  componentDidMount() {
+    // eslint-disable-next-line react/no-did-mount-set-state
+    this.setState({
+      style: {
+        height: this.element.clientHeight,
+      },
+    });
+  }
+
   render() {
     return (
       <div
+        ref={element => {
+          this.element = element;
+        }}
+        style={this.state.style}
         className={cx({
           star: this.props.star,
           intersection: true,

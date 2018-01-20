@@ -20,16 +20,36 @@ class MoveIntersection extends React.Component {
     boardsize: PropTypes.number.isRequired,
   };
 
+  constructor(props){
+    super(props);
+    this.state = {
+      style: {},
+    };
+  }
+
+  componentDidMount() {
+    // eslint-disable-next-line react/no-did-mount-set-state
+    this.setState({
+      style: {
+        height: this.element.clientHeight,
+      },
+    });
+  }
+
   render() {
     return (
       <div
         data-offset-x={this.props.row}
         data-offset-y={this.props.col}
+        style={this.state.style}
         className={cx({
           intersection: true,
         })}
       >
         <div
+          ref={element => {
+            this.element = element;
+          }}
           style={{
             transform: `translateY(-50%) scale(calc(1.6 - ${this.props
               .boardsize / 20}))`,

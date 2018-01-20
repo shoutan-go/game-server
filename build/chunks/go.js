@@ -2038,10 +2038,6 @@ function (_React$Component) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__LineIntersection_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__LineIntersection_css__);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-var REACT_ELEMENT_TYPE;
-
-function _jsx(type, props, key, children) { if (!REACT_ELEMENT_TYPE) { REACT_ELEMENT_TYPE = typeof Symbol === "function" && Symbol.for && Symbol.for("react.element") || 0xeac7; } var defaultProps = type && type.defaultProps; var childrenLength = arguments.length - 3; if (!props && childrenLength !== 0) { props = {}; } if (props && defaultProps) { for (var propName in defaultProps) { if (props[propName] === void 0) { props[propName] = defaultProps[propName]; } } } else if (!props) { props = defaultProps || {}; } if (childrenLength === 1) { props.children = children; } else if (childrenLength > 1) { var childArray = new Array(childrenLength); for (var i = 0; i < childrenLength; i++) { childArray[i] = arguments[i + 3]; } props.children = childArray; } return { $$typeof: REACT_ELEMENT_TYPE, type: type, key: key === undefined ? null : '' + key, ref: null, props: props, _owner: null }; }
-
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2070,16 +2066,38 @@ var LineIntersection =
 function (_React$Component) {
   _inherits(LineIntersection, _React$Component);
 
-  function LineIntersection() {
+  function LineIntersection(props) {
+    var _this;
+
     _classCallCheck(this, LineIntersection);
 
-    return _possibleConstructorReturn(this, (LineIntersection.__proto__ || Object.getPrototypeOf(LineIntersection)).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, (LineIntersection.__proto__ || Object.getPrototypeOf(LineIntersection)).call(this, props));
+    _this.state = {
+      style: {}
+    };
+    return _this;
   }
 
   _createClass(LineIntersection, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      // eslint-disable-next-line react/no-did-mount-set-state
+      this.setState({
+        style: {
+          height: this.element.clientHeight
+        }
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
-      return _jsx("div", {
+      var _this2 = this;
+
+      return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+        ref: function ref(element) {
+          _this2.element = element;
+        },
+        style: this.state.style,
         className: cx(_extends({
           star: this.props.star,
           intersection: true,
@@ -2869,22 +2887,44 @@ var MoveIntersection =
 function (_React$Component) {
   _inherits(MoveIntersection, _React$Component);
 
-  function MoveIntersection() {
+  function MoveIntersection(props) {
+    var _this;
+
     _classCallCheck(this, MoveIntersection);
 
-    return _possibleConstructorReturn(this, (MoveIntersection.__proto__ || Object.getPrototypeOf(MoveIntersection)).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, (MoveIntersection.__proto__ || Object.getPrototypeOf(MoveIntersection)).call(this, props));
+    _this.state = {
+      style: {}
+    };
+    return _this;
   }
 
   _createClass(MoveIntersection, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      // eslint-disable-next-line react/no-did-mount-set-state
+      this.setState({
+        style: {
+          height: this.element.clientHeight
+        }
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       return _jsx("div", {
         "data-offset-x": this.props.row,
         "data-offset-y": this.props.col,
+        style: this.state.style,
         className: cx({
           intersection: true
         })
-      }, void 0, _jsx("div", {
+      }, void 0, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+        ref: function ref(element) {
+          _this2.element = element;
+        },
         style: {
           transform: "translateY(-50%) scale(calc(1.6 - ".concat(this.props.boardsize / 20, "))")
         },
@@ -2893,7 +2933,7 @@ function (_React$Component) {
           black: this.props.stone === __WEBPACK_IMPORTED_MODULE_4_game_engine___default.a.Go.COLOR.WHITE,
           white: this.props.stone === __WEBPACK_IMPORTED_MODULE_4_game_engine___default.a.Go.COLOR.BLACK
         })
-      }, void 0, this.props.value !== 0 ? this.props.value : ''));
+      }, this.props.value !== 0 ? this.props.value : ''));
     }
   }]);
 
