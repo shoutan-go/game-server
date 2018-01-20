@@ -90,6 +90,7 @@ const wechat = {
         };
       })
       .catch(e => {
+        console.error(e);
         const noncestr = Math.random().toString();
         const timestamp = Math.floor(new Date().getTime() / 1000);
         return {

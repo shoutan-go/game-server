@@ -2777,6 +2777,7 @@ var wechat = {
         signature: signature
       };
     }).catch(function (e) {
+      console.error(e);
       var noncestr = Math.random().toString();
       var timestamp = Math.floor(new Date().getTime() / 1000);
       return {
