@@ -50,66 +50,53 @@ export default function() {
               ),
             )
             .then(() => {
-              switch (msg.type) {
-                case 'pass':
-                  if (
-                    engine.currentColor() !== GameEngine.Go.COLOR.BLACK &&
-                    engine.currentColor() !== GameEngine.Go.COLOR.WHITE
-                  ) {
-                    fetch(config.gnugo, {
-                      method: 'POST',
-                      body: engine.toSgf(),
-                    })
-                      .then(res => res.text())
-                      .then(text => {
-                        const r = text.match(re);
-                        if (r) {
-                          redis
-                            .hsetAsync(
-                              `info:${ws.channel}`,
-                              'result',
-                              `${r[1]}+${r[2]}`,
-                            )
-                            .then(() => {
-                              redis.publishAsync(
-                                `channel:${ws.channel}`,
-                                JSON.stringify({
-                                  code: 'ok',
-                                  type: 'result',
-                                  result: `${r[1]}+${r[2]}`,
-                                }),
-                              );
-                            });
-                        }
-                      });
-                  }
-                  break;
-                case 'resign':
-                  redis
-                    .hsetAsync(
-                      `info:${ws.channel}`,
-                      'result',
-                      `${
-                        msg.color === GameEngine.Go.COLOR.BLACK ? 'W+R' : 'B+R'
-                      }`,
-                    )
-                    .then(() => {
-                      redis.publishAsync(
-                        `channel:${ws.channel}`,
-                        JSON.stringify({
-                          code: 'ok',
-                          type: 'result',
-                          result: `${
-                            msg.color === GameEngine.Go.COLOR.BLACK
-                              ? 'W+R'
-                              : 'B+R'
-                          }`,
-                        }),
-                      );
-                    });
-                  break;
-                default:
-                  break;
+              if (engine.winner() === 'estimate') {
+                fetch(config.gnugo, {
+                  method: 'POST',
+                  body: engine.toSgf(),
+                })
+                  .then(res => res.text())
+                  .then(text => {
+                    const r = text.match(re);
+                    if (r) {
+                      redis
+                        .hsetAsync(
+                          `info:${ws.channel}`,
+                          'result',
+                          `${r[1]}+${r[2]}`,
+                        )
+                        .then(() => {
+                          redis.publishAsync(
+                            `channel:${ws.channel}`,
+                            JSON.stringify({
+                              code: 'ok',
+                              type: 'result',
+                              result: `${r[1]}+${r[2]}`,
+                            }),
+                          );
+                        });
+                    }
+                  });
+              } else if (engine.winner()) {
+                const winner = engine.winner();
+                redis
+                  .hsetAsync(
+                    `info:${ws.channel}`,
+                    'result',
+                    `${winner === GameEngine.Go.COLOR.BLACK ? 'B+R' : 'W+R'}`,
+                  )
+                  .then(() => {
+                    redis.publishAsync(
+                      `channel:${ws.channel}`,
+                      JSON.stringify({
+                        code: 'ok',
+                        type: 'result',
+                        result: `${
+                          winner === GameEngine.Go.COLOR.BLACK ? 'B+R' : 'W+R'
+                        }`,
+                      }),
+                    );
+                  });
               }
             });
         }

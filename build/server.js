@@ -1736,43 +1736,34 @@ __WEBPACK_IMPORTED_MODULE_5__redis__["b" /* subscriber */].on('message', functio
               move: msg
             }));
           }).then(function () {
-            switch (msg.type) {
-              case 'pass':
-                if (engine.currentColor() !== __WEBPACK_IMPORTED_MODULE_1_game_engine___default.a.Go.COLOR.BLACK && engine.currentColor() !== __WEBPACK_IMPORTED_MODULE_1_game_engine___default.a.Go.COLOR.WHITE) {
-                  __WEBPACK_IMPORTED_MODULE_2_node_fetch___default()(__WEBPACK_IMPORTED_MODULE_3__config___default.a.gnugo, {
-                    method: 'POST',
-                    body: engine.toSgf()
-                  }).then(function (res) {
-                    return res.text();
-                  }).then(function (text) {
-                    var r = text.match(re);
+            if (engine.winner() === 'estimate') {
+              __WEBPACK_IMPORTED_MODULE_2_node_fetch___default()(__WEBPACK_IMPORTED_MODULE_3__config___default.a.gnugo, {
+                method: 'POST',
+                body: engine.toSgf()
+              }).then(function (res) {
+                return res.text();
+              }).then(function (text) {
+                var r = text.match(re);
 
-                    if (r) {
-                      __WEBPACK_IMPORTED_MODULE_5__redis__["a" /* redis */].hsetAsync("info:".concat(ws.channel), 'result', "".concat(r[1], "+").concat(r[2])).then(function () {
-                        __WEBPACK_IMPORTED_MODULE_5__redis__["a" /* redis */].publishAsync("channel:".concat(ws.channel), JSON.stringify({
-                          code: 'ok',
-                          type: 'result',
-                          result: "".concat(r[1], "+").concat(r[2])
-                        }));
-                      });
-                    }
+                if (r) {
+                  __WEBPACK_IMPORTED_MODULE_5__redis__["a" /* redis */].hsetAsync("info:".concat(ws.channel), 'result', "".concat(r[1], "+").concat(r[2])).then(function () {
+                    __WEBPACK_IMPORTED_MODULE_5__redis__["a" /* redis */].publishAsync("channel:".concat(ws.channel), JSON.stringify({
+                      code: 'ok',
+                      type: 'result',
+                      result: "".concat(r[1], "+").concat(r[2])
+                    }));
                   });
                 }
-
-                break;
-
-              case 'resign':
-                __WEBPACK_IMPORTED_MODULE_5__redis__["a" /* redis */].hsetAsync("info:".concat(ws.channel), 'result', "".concat(msg.color === __WEBPACK_IMPORTED_MODULE_1_game_engine___default.a.Go.COLOR.BLACK ? 'W+R' : 'B+R')).then(function () {
-                  __WEBPACK_IMPORTED_MODULE_5__redis__["a" /* redis */].publishAsync("channel:".concat(ws.channel), JSON.stringify({
-                    code: 'ok',
-                    type: 'result',
-                    result: "".concat(msg.color === __WEBPACK_IMPORTED_MODULE_1_game_engine___default.a.Go.COLOR.BLACK ? 'W+R' : 'B+R')
-                  }));
-                });
-                break;
-
-              default:
-                break;
+              });
+            } else if (engine.winner()) {
+              var winner = engine.winner();
+              __WEBPACK_IMPORTED_MODULE_5__redis__["a" /* redis */].hsetAsync("info:".concat(ws.channel), 'result', "".concat(winner === __WEBPACK_IMPORTED_MODULE_1_game_engine___default.a.Go.COLOR.BLACK ? 'B+R' : 'W+R')).then(function () {
+                __WEBPACK_IMPORTED_MODULE_5__redis__["a" /* redis */].publishAsync("channel:".concat(ws.channel), JSON.stringify({
+                  code: 'ok',
+                  type: 'result',
+                  result: "".concat(winner === __WEBPACK_IMPORTED_MODULE_1_game_engine___default.a.Go.COLOR.BLACK ? 'B+R' : 'W+R')
+                }));
+              });
             }
           });
         }
