@@ -3,7 +3,7 @@
     "js": "/assets/go-creation.a4e94f63.chunk.js"
   },
   "go": {
-    "js": "/assets/go.7a2004ce.chunk.js"
+    "js": "/assets/go.e83738f4.chunk.js"
   },
   "home": {
     "js": "/assets/home.5153942d.chunk.js"
@@ -24,6 +24,6 @@
     "js": "/assets/client.7543957b.js"
   },
   "vendor": {
-    "js": "/assets/vendor.d95d1df4.js"
+    "js": "/assets/vendor.920317d0.js"
   }
 }
