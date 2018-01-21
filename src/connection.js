@@ -190,6 +190,7 @@ export default function() {
                       ? profile[info.white].picture
                       : 'http://wx.qlogo.cn/mmopen/jj4e65x0Px2ibxI8cBsLdxueOibCLrqHvg9U91Dvk0ohjQHgO2dias3LiaHazszmh0CJX4xhknnfwibqwDwWfCBaVPslgIcyBG81A/64',
                   },
+                  goal: info.goal,
                 },
               },
             }),

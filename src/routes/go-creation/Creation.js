@@ -6,6 +6,7 @@ import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import swal from 'sweetalert2';
 import PropTypes from 'prop-types';
@@ -22,11 +23,39 @@ class Creation extends React.Component {
       rule: 'Go',
       boardsize: 19,
       color: 'black',
+      goal: null,
+      goalErrorText: null,
     };
     this.submit = this.submit.bind(this);
+    this.handleRule = this.handleRule.bind(this);
+    this.handleGoal = this.handleGoal.bind(this);
   }
 
-  handler(id) {
+  handleRule(event, index, value) {
+    const newState = {};
+    newState.rule = value;
+    if (value === 'Go') {
+      newState.goal = null;
+    }
+    if (value === 'CaptureGo') {
+      newState.goal = 1;
+    }
+    this.setState(newState);
+  }
+
+  handleGoal(event, value) {
+    const newState = {};
+    if (!parseInt(value, 10) || parseInt(value, 10) <= 0) {
+      newState.goalErrorText = '必须为数字且大于0';
+      newState.goal = value;
+    } else {
+      newState.goal = parseInt(value, 10);
+      newState.goalErrorText = null;
+    }
+    this.setState(newState);
+  }
+
+  handleGeneral(id) {
     const self = this;
     // eslint-disable-next-line func-names
     return function(event, index, value) {
@@ -39,7 +68,12 @@ class Creation extends React.Component {
   submit() {
     const self = this;
     this.props
-      .create(this.state.rule, this.state.boardsize, this.state.color)
+      .create(
+        this.state.rule,
+        this.state.boardsize,
+        this.state.color,
+        typeof this.state.goal === 'number' ? this.state.goal : 1,
+      )
       .then(r => {
         swal({
           type: 'success',
@@ -86,6 +120,7 @@ class Creation extends React.Component {
   }
 
   render() {
+    console.log(this.state);
     return (
       <div className={s.root}>
         <div className={s.container}>
@@ -95,27 +130,38 @@ class Creation extends React.Component {
               id="rule"
               floatingLabelText="规则"
               value={this.state.rule}
-              onChange={this.handler('rule')}
+              onChange={this.handleRule}
             >
               <MenuItem value="Go" primaryText="普通" />
               <MenuItem value="CaptureGo" primaryText="吃子棋" />
             </SelectField>
+            {this.state.goal !== null && <br />}
+            {this.state.goal !== null && (
+              <TextField
+                floatingLabelFixed
+                floatingLabelText="吃子目标"
+                value={this.state.goal}
+                errorText={this.state.goalErrorText}
+                onChange={this.handleGoal}
+              />
+            )}
             <br />
             <SelectField
               id="boardsize"
               floatingLabelText="棋盘"
               value={this.state.boardsize}
-              onChange={this.handler('boardsize')}
+              onChange={this.handleGeneral('boardsize')}
             >
               <MenuItem value={9} primaryText="9路" />
               <MenuItem value={13} primaryText="13路" />
               <MenuItem value={19} primaryText="19路" />
             </SelectField>
+            <br />
             <SelectField
               id="color"
               floatingLabelText="我方颜色"
               value={this.state.color}
-              onChange={this.handler('color')}
+              onChange={this.handleGeneral('color')}
             >
               <MenuItem value="black" primaryText="执黑" />
               <MenuItem value="white" primaryText="执白" />

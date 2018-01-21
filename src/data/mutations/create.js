@@ -22,8 +22,11 @@ const createGo = {
       type: GraphQLFloat,
     },
     color: { type: GraphQLString },
+    goal: {
+      type: GraphQLInt,
+    },
   },
-  resolve: (root, { rule, boardsize, handicap, komi, color }) => {
+  resolve: (root, { rule, boardsize, handicap, komi, color, goal }) => {
     const id = Math.random()
       .toString(16)
       .split('.')[1];
@@ -40,6 +43,7 @@ const createGo = {
           color === 'black'
             ? { black: root.request.user.id }
             : { white: root.request.user.id },
+          goal ? { goal } : {},
         ),
       ),
     ]).then(() => ({

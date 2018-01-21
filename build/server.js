@@ -1876,7 +1876,8 @@ __WEBPACK_IMPORTED_MODULE_5__redis__["b" /* subscriber */].on('message', functio
                   id: info.white,
                   name: profile[info.white] ? profile[info.white].displayName : '[白棋]',
                   avatar: profile[info.white] ? profile[info.white].picture : 'http://wx.qlogo.cn/mmopen/jj4e65x0Px2ibxI8cBsLdxueOibCLrqHvg9U91Dvk0ohjQHgO2dias3LiaHazszmh0CJX4xhknnfwibqwDwWfCBaVPslgIcyBG81A/64'
-                }
+                },
+                goal: info.goal
               }
             }
           }));
@@ -2382,14 +2383,14 @@ var routes = {
     }, {
       path: '',
       load: function load() {
-        return __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 95));
+        return __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 96));
       }
     }]
   }, // Wildcard routes, e.g. { path: '(.*)', ... } (must go last)
   {
     path: '(.*)',
     load: function load() {
-      return __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, 98));
+      return __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, 99));
     }
   }],
   action: function () {
@@ -2856,6 +2857,9 @@ var createGo = {
     },
     color: {
       type: __WEBPACK_IMPORTED_MODULE_0_graphql__["GraphQLString"]
+    },
+    goal: {
+      type: __WEBPACK_IMPORTED_MODULE_0_graphql__["GraphQLInt"]
     }
   },
   resolve: function resolve(root, _ref) {
@@ -2863,7 +2867,8 @@ var createGo = {
         boardsize = _ref.boardsize,
         handicap = _ref.handicap,
         komi = _ref.komi,
-        color = _ref.color;
+        color = _ref.color,
+        goal = _ref.goal;
     var id = Math.random().toString(16).split('.')[1];
     return Promise.all([__WEBPACK_IMPORTED_MODULE_2__redis__["a" /* redis */].setAsync("engine:".concat(id), rule), __WEBPACK_IMPORTED_MODULE_2__redis__["a" /* redis */].hmsetAsync("info:".concat(id), Object.assign({
       boardsize: boardsize,
@@ -2873,7 +2878,9 @@ var createGo = {
       black: root.request.user.id
     } : {
       white: root.request.user.id
-    }))]).then(function () {
+    }, goal ? {
+      goal: goal
+    } : {}))]).then(function () {
       return {
         id: id,
         engine: rule,
@@ -3009,7 +3016,8 @@ var updateGo = {
                   id: info.white,
                   name: profile[info.white] ? profile[info.white].displayName : '[白棋]',
                   avatar: profile[info.white] ? profile[info.white].picture : 'http://wx.qlogo.cn/mmopen/jj4e65x0Px2ibxI8cBsLdxueOibCLrqHvg9U91Dvk0ohjQHgO2dias3LiaHazszmh0CJX4xhknnfwibqwDwWfCBaVPslgIcyBG81A/64'
-                }
+                },
+                goal: info.goal
               }
             }
           })).then(function () {
@@ -3261,23 +3269,29 @@ module.exports = require("material-ui/MenuItem");
 /* 93 */
 /***/ (function(module, exports) {
 
-module.exports = require("material-ui/RaisedButton");
+module.exports = require("material-ui/TextField");
 
 /***/ }),
 /* 94 */
 /***/ (function(module, exports) {
 
+module.exports = require("material-ui/RaisedButton");
+
+/***/ }),
+/* 95 */
+/***/ (function(module, exports) {
+
 module.exports = require("sweetalert2");
 
 /***/ }),
-/* 95 */,
-/* 96 */
+/* 96 */,
+/* 97 */
 /***/ (function(module, exports) {
 
 module.exports = require("react-websocket");
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports) {
 
 module.exports = require("react-rangeslider");

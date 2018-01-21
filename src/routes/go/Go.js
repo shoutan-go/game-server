@@ -246,7 +246,7 @@ class Go extends React.Component {
           <div className={s.scoreboard}>
             {match
               ? `${match[1] === 'W' ? '白' : '黑'}胜${
-                  match[2] === 'R' ? '，对方投降' : `${match[2]}目`
+                  match[2] === 'R' ? '' : `${match[2]}目`
                 }`
               : ''}
           </div>
