@@ -897,6 +897,7 @@ function (_React$Component) {
           var _changeMoves = _asyncToGenerator(
           /*#__PURE__*/
           regeneratorRuntime.mark(function _callee(move) {
+            var marks;
             return regeneratorRuntime.wrap(function _callee$(_context) {
               while (1) {
                 switch (_context.prev = _context.next) {
@@ -913,10 +914,13 @@ function (_React$Component) {
                     }
 
                     _this.controledEngine = _this.controledEngine.bind(_assertThisInitialized(_this));
+                    marks = JSON.parse(JSON.stringify(Array(_this.props.boardsize).fill(Array(_this.props.boardsize).fill(null))));
 
-                    _this.game.update();
+                    _this.game.update({
+                      marks: marks
+                    });
 
-                  case 3:
+                  case 4:
                   case "end":
                     return _context.stop();
                 }

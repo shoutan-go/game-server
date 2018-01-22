@@ -179,7 +179,16 @@ class Go extends React.Component {
         };
       }
       this.controledEngine = this.controledEngine.bind(this);
-      this.game.update();
+      const marks = JSON.parse(
+        JSON.stringify(
+          Array(this.props.boardsize).fill(
+            Array(this.props.boardsize).fill(null),
+          ),
+        ),
+      );
+      this.game.update({
+        marks,
+      });
     },
     toggleMoves: () => {
       this.setState({
