@@ -19,7 +19,7 @@ class Layer extends React.Component {
     handleClick: PropTypes.func.isRequired,
     board: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
     moves: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
-    marks: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
+    marks: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
     showMoves: PropTypes.bool,
     temporary: PropTypes.shape({
       color: PropTypes.number.isRequired,

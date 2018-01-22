@@ -846,7 +846,7 @@ function (_React$Component) {
           _this.engine[move.type](move.color, move.position && move.position[0], move.position && move.position[1]);
 
           if (move.type === 'play') {
-            var marks = Array(_this.props.boardsize).fill(Array(_this.props.boardsize).fill(null));
+            var marks = JSON.parse(JSON.stringify(Array(_this.props.boardsize).fill(Array(_this.props.boardsize).fill(null))));
             marks[move.position[0]][move.position[1]] = 'choose';
 
             _this.game.update({
@@ -1029,10 +1029,10 @@ function (_React$Component) {
       result: null,
       game: {
         maxMoves: 0,
-        boardMoves: Array(_this.props.boardsize).fill(Array(_this.props.boardsize).fill(0)),
-        board: Array(_this.props.boardsize).fill(Array(_this.props.boardsize).fill(0))
+        boardMoves: JSON.parse(JSON.stringify(Array(_this.props.boardsize).fill(Array(_this.props.boardsize).fill(null)))),
+        board: JSON.parse(JSON.stringify(Array(_this.props.boardsize).fill(Array(_this.props.boardsize).fill(null))))
       },
-      marks: Array(_this.props.boardsize).fill(Array(_this.props.boardsize).fill(null)),
+      marks: JSON.parse(JSON.stringify(Array(_this.props.boardsize).fill(Array(_this.props.boardsize).fill(null)))),
       control: {
         showMoves: false
       }

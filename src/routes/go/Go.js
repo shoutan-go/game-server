@@ -49,15 +49,27 @@ class Go extends React.Component {
       result: null,
       game: {
         maxMoves: 0,
-        boardMoves: Array(this.props.boardsize).fill(
-          Array(this.props.boardsize).fill(0),
+        boardMoves: JSON.parse(
+          JSON.stringify(
+            Array(this.props.boardsize).fill(
+              Array(this.props.boardsize).fill(null),
+            ),
+          ),
         ),
-        board: Array(this.props.boardsize).fill(
-          Array(this.props.boardsize).fill(0),
+        board: JSON.parse(
+          JSON.stringify(
+            Array(this.props.boardsize).fill(
+              Array(this.props.boardsize).fill(null),
+            ),
+          ),
         ),
       },
-      marks: Array(this.props.boardsize).fill(
-        Array(this.props.boardsize).fill(null),
+      marks: JSON.parse(
+        JSON.stringify(
+          Array(this.props.boardsize).fill(
+            Array(this.props.boardsize).fill(null),
+          ),
+        ),
       ),
       control: {
         showMoves: false,
@@ -95,9 +107,13 @@ class Go extends React.Component {
         move.position && move.position[1],
       );
       if (move.type === 'play') {
-        const marks = Array(this.props.boardsize).fill(
-          Array(this.props.boardsize).fill(null),
-        )
+        const marks = JSON.parse(
+          JSON.stringify(
+            Array(this.props.boardsize).fill(
+              Array(this.props.boardsize).fill(null),
+            ),
+          ),
+        );
         marks[move.position[0]][move.position[1]] = 'choose';
         this.game.update({
           marks,
