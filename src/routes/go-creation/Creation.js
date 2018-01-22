@@ -171,6 +171,7 @@ class Creation extends React.Component {
               onChange={this.handleGeneral('komi')}
             >
               <MenuItem value={0} primaryText="0目" />
+              <MenuItem value={5.5} primaryText="5.5目" />
               <MenuItem value={6.5} primaryText="6.5目" />
             </SelectField>
             <br />

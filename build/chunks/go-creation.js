@@ -636,18 +636,23 @@ var _ref9 = _jsx(__WEBPACK_IMPORTED_MODULE_3_material_ui_MenuItem___default.a, {
 });
 
 var _ref10 = _jsx(__WEBPACK_IMPORTED_MODULE_3_material_ui_MenuItem___default.a, {
+  value: 5.5,
+  primaryText: "5.5\u76EE"
+});
+
+var _ref11 = _jsx(__WEBPACK_IMPORTED_MODULE_3_material_ui_MenuItem___default.a, {
   value: 6.5,
   primaryText: "6.5\u76EE"
 });
 
-var _ref11 = _jsx("br", {});
+var _ref12 = _jsx("br", {});
 
-var _ref12 = _jsx(__WEBPACK_IMPORTED_MODULE_3_material_ui_MenuItem___default.a, {
+var _ref13 = _jsx(__WEBPACK_IMPORTED_MODULE_3_material_ui_MenuItem___default.a, {
   value: "black",
   primaryText: "\u6267\u9ED1"
 });
 
-var _ref13 = _jsx(__WEBPACK_IMPORTED_MODULE_3_material_ui_MenuItem___default.a, {
+var _ref14 = _jsx(__WEBPACK_IMPORTED_MODULE_3_material_ui_MenuItem___default.a, {
   value: "white",
   primaryText: "\u6267\u767D"
 });
@@ -792,12 +797,12 @@ function (_React$Component) {
         floatingLabelText: "\u8D34\u76EE",
         value: this.state.komi,
         onChange: this.handleGeneral('komi')
-      }, void 0, _ref9, _ref10), _ref11, _jsx(__WEBPACK_IMPORTED_MODULE_2_material_ui_SelectField___default.a, {
+      }, void 0, _ref9, _ref10, _ref11), _ref12, _jsx(__WEBPACK_IMPORTED_MODULE_2_material_ui_SelectField___default.a, {
         id: "color",
         floatingLabelText: "\u6211\u65B9\u989C\u8272",
         value: this.state.color,
         onChange: this.handleGeneral('color')
-      }, void 0, _ref12, _ref13), _jsx("div", {
+      }, void 0, _ref13, _ref14), _jsx("div", {
         className: __WEBPACK_IMPORTED_MODULE_8__Creation_css___default.a.submit
       }, void 0, _jsx(__WEBPACK_IMPORTED_MODULE_5_material_ui_RaisedButton___default.a, {
         label: "\u53D1\u8D77\u6311\u6218",
