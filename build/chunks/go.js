@@ -941,7 +941,6 @@ function (_React$Component) {
         },
         pass: function pass() {
           if (_this.engine.currentColor() === _this.state.color) {
-            // this.engine.pass(this.state.color);
             _this.websocket.sendMessage(JSON.stringify({
               color: _this.state.color,
               type: 'pass'
@@ -950,7 +949,6 @@ function (_React$Component) {
         },
         resign: function resign() {
           if (_this.engine.currentColor() === _this.state.color) {
-            // this.engine.resign(this.state.color);
             _this.websocket.sendMessage(JSON.stringify({
               color: _this.state.color,
               type: 'resign'

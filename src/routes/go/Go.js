@@ -199,7 +199,6 @@ class Go extends React.Component {
     },
     pass: () => {
       if (this.engine.currentColor() === this.state.color) {
-        // this.engine.pass(this.state.color);
         this.websocket.sendMessage(
           JSON.stringify({
             color: this.state.color,
@@ -210,7 +209,6 @@ class Go extends React.Component {
     },
     resign: () => {
       if (this.engine.currentColor() === this.state.color) {
-        // this.engine.resign(this.state.color);
         this.websocket.sendMessage(
           JSON.stringify({
             color: this.state.color,
