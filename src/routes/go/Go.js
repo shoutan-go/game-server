@@ -94,8 +94,10 @@ class Go extends React.Component {
         move.position && move.position[0],
         move.position && move.position[1],
       );
-      if (move.color !== this.state.color && move.type === 'play') {
-        const marks = JSON.parse(JSON.stringify(this.state.marks));
+      if (move.type === 'play') {
+        const marks = Array(this.props.boardsize).fill(
+          Array(this.props.boardsize).fill(null),
+        )
         marks[move.position[0]][move.position[1]] = 'choose';
         this.game.update({
           marks,
