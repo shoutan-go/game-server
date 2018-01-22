@@ -11,6 +11,7 @@ import HighlightLayer from './highlight/HighlightLayer';
 import StoneLayer from './stone/StoneLayer';
 import MoveLayer from './move/MoveLayer';
 import EventLayer from './event/EventLayer';
+import MarkLayer from './mark/MarkLayer';
 import css from './Layer.css';
 
 class Layer extends React.Component {
@@ -18,6 +19,7 @@ class Layer extends React.Component {
     handleClick: PropTypes.func.isRequired,
     board: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
     moves: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
+    marks: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
     showMoves: PropTypes.bool,
     temporary: PropTypes.shape({
       color: PropTypes.number.isRequired,
@@ -76,6 +78,10 @@ class Layer extends React.Component {
           board={this.props.board}
           handleClick={this.props.handleClick}
           temporary={this.props.temporary}
+        />
+        <MarkLayer
+          boardsize={this.props.board.length}
+          marks={this.props.marks}
         />
         {this.props.showMoves && (
           <MoveLayer

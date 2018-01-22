@@ -1,0 +1,16 @@
+@import '../Intersection.css';
+
+.choose {
+  background: no-repeat center/cover url('./choose.png');
+  border-radius: 50%;
+}
+
+.mark::before {
+  width: 50%;
+  margin-left: 100%;
+}
+
+.mark::after {
+  height: 58%;
+  margin-top: 42%;
+}

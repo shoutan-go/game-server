@@ -16,10 +16,10 @@ const createGo = {
       type: new GraphQLNonNull(GraphQLInt),
     },
     handicap: {
-      type: GraphQLInt,
+      type: new GraphQLNonNull(GraphQLInt),
     },
     komi: {
-      type: GraphQLFloat,
+      type: new GraphQLNonNull(GraphQLFloat),
     },
     color: { type: GraphQLString },
     goal: {

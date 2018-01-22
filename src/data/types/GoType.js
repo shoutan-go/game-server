@@ -27,6 +27,9 @@ const GoType = new GraphQLObjectType({
           white: {
             type: GraphQLString,
           },
+          goal: {
+            type: GraphQLInt,
+          },
         },
       }),
     },

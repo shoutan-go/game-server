@@ -27,7 +27,8 @@ async function action({ query: { id, invite }, store, client }) {
 
   return {
     chunks: ['go'],
-    title: '对局中',
+    title:
+      data.go.engine === 'Go' ? '对局中' : `吃子棋(${data.go.info.goal}子)`,
     component: (
       <Layout>
         <Go

@@ -56,6 +56,9 @@ class Go extends React.Component {
           Array(this.props.boardsize).fill(0),
         ),
       },
+      marks: Array(this.props.boardsize).fill(
+        Array(this.props.boardsize).fill(null),
+      ),
       control: {
         showMoves: false,
       },
@@ -91,42 +94,56 @@ class Go extends React.Component {
         move.position && move.position[0],
         move.position && move.position[1],
       );
-      this.game.update();
+      if (move.color !== this.state.color && move.type === 'play') {
+        const marks = JSON.parse(JSON.stringify(this.state.marks));
+        marks[move.position[0]][move.position[1]] = 'choose';
+        this.game.update({
+          marks,
+        });
+      } else {
+        this.game.update();
+      }
     },
     result: r => {
       this.setState({
         result: r,
       });
     },
-    update: () => {
-      this.setState({
-        black: {
-          id: this.engine.info.black.id,
-          name: this.engine.info.black.name,
-          avatar: this.engine.info.black.avatar,
-          captured: this.controledEngine().captured[GameEngine.Go.COLOR.BLACK],
-        },
-        white: {
-          id: this.engine.info.white.id,
-          name: this.engine.info.white.name,
-          avatar: this.engine.info.white.avatar,
-          captured: this.controledEngine().captured[GameEngine.Go.COLOR.WHITE],
-        },
-        turn: this.controledEngine().currentColor(),
-        result: this.state.result || this.engine.info.result,
-        game: {
-          boardMoves: this.controledEngine().boardMoves,
-          board: this.controledEngine().board,
-          maxMoves: this.engine.moves.length,
-        },
-        color:
-          // eslint-disable-next-line no-nested-ternary
-          this.props.user === this.engine.info.black.id
-            ? GameEngine.Go.COLOR.BLACK
-            : this.props.user === this.engine.info.white.id
-              ? GameEngine.Go.COLOR.WHITE
-              : GameEngine.Go.COLOR.EMPTY,
-      });
+    update: inheritState => {
+      this.setState(
+        Object.assign(inheritState || {}, {
+          black: {
+            id: this.engine.info.black.id,
+            name: this.engine.info.black.name,
+            avatar: this.engine.info.black.avatar,
+            captured: this.controledEngine().captured[
+              GameEngine.Go.COLOR.BLACK
+            ],
+          },
+          white: {
+            id: this.engine.info.white.id,
+            name: this.engine.info.white.name,
+            avatar: this.engine.info.white.avatar,
+            captured: this.controledEngine().captured[
+              GameEngine.Go.COLOR.WHITE
+            ],
+          },
+          turn: this.controledEngine().currentColor(),
+          result: this.state.result || this.engine.info.result,
+          game: {
+            boardMoves: this.controledEngine().boardMoves,
+            board: this.controledEngine().board,
+            maxMoves: this.engine.moves.length,
+          },
+          color:
+            // eslint-disable-next-line no-nested-ternary
+            this.props.user === this.engine.info.black.id
+              ? GameEngine.Go.COLOR.BLACK
+              : this.props.user === this.engine.info.white.id
+                ? GameEngine.Go.COLOR.WHITE
+                : GameEngine.Go.COLOR.EMPTY,
+        }),
+      );
     },
   };
 
@@ -254,7 +271,9 @@ class Go extends React.Component {
         <Layer
           moves={this.state.game.boardMoves}
           board={this.state.game.board}
+          marks={this.state.marks}
           handleClick={this.handler.click}
+          color={this.state.color}
           showMoves={this.state.control.showMoves}
           temporary={this.state.temporary}
         />

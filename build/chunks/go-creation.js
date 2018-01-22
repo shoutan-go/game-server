@@ -631,11 +631,23 @@ var _ref7 = _jsx(__WEBPACK_IMPORTED_MODULE_3_material_ui_MenuItem___default.a, {
 var _ref8 = _jsx("br", {});
 
 var _ref9 = _jsx(__WEBPACK_IMPORTED_MODULE_3_material_ui_MenuItem___default.a, {
+  value: 0,
+  primaryText: "0\u76EE"
+});
+
+var _ref10 = _jsx(__WEBPACK_IMPORTED_MODULE_3_material_ui_MenuItem___default.a, {
+  value: 6.5,
+  primaryText: "6.5\u76EE"
+});
+
+var _ref11 = _jsx("br", {});
+
+var _ref12 = _jsx(__WEBPACK_IMPORTED_MODULE_3_material_ui_MenuItem___default.a, {
   value: "black",
   primaryText: "\u6267\u9ED1"
 });
 
-var _ref10 = _jsx(__WEBPACK_IMPORTED_MODULE_3_material_ui_MenuItem___default.a, {
+var _ref13 = _jsx(__WEBPACK_IMPORTED_MODULE_3_material_ui_MenuItem___default.a, {
   value: "white",
   primaryText: "\u6267\u767D"
 });
@@ -655,6 +667,8 @@ function (_React$Component) {
       rule: 'Go',
       boardsize: 19,
       color: 'black',
+      handicap: 0,
+      komi: 6.5,
       goal: null,
       goalErrorText: null
     };
@@ -672,10 +686,12 @@ function (_React$Component) {
 
       if (value === 'Go') {
         newState.goal = null;
+        newState.komi = 6.5;
       }
 
       if (value === 'CaptureGo') {
         newState.goal = 1;
+        newState.komi = 0;
       }
 
       this.setState(newState);
@@ -710,7 +726,7 @@ function (_React$Component) {
     key: "submit",
     value: function submit() {
       var self = this;
-      this.props.create(this.state.rule, this.state.boardsize, this.state.color, typeof this.state.goal === 'number' ? this.state.goal : 1).then(function (r) {
+      this.props.create(this.state.rule, this.state.boardsize, this.state.handicap, this.state.komi, this.state.color, typeof this.state.goal === 'number' ? this.state.goal : null).then(function (r) {
         __WEBPACK_IMPORTED_MODULE_6_sweetalert2___default()({
           type: 'success',
           title: '对局创建成功！',
@@ -724,15 +740,15 @@ function (_React$Component) {
             return new Promise(function (resolve) {
               // eslint-disable-next-line no-undef
               wx.onMenuShareTimeline({
-                title: "\u542C\u8BF4\u4F60\u56F4\u68CB\u4E0B\u7684\u4E0D\u9519\uFF0C\u6211\u6267".concat(self.state.color === 'black' ? '黑' : '白', "\uFF0C\u6765\u4E00\u5C40\uFF1F"),
+                title: "\u542C\u8BF4\u4F60\u56F4\u68CB\u4E0B\u7684\u4E0D\u9519\uFF0C\u6211\u6267".concat(self.state.color === 'black' ? '黑' : '白', "\uFF0C\u6765\u4E00\u5C40").concat(self.state.rule === 'CaptureGo' ? '吃子棋' : '', "\uFF1F"),
                 link: "".concat(window.location.origin, "/go?id=").concat(r.data.createGo.id, "&invite=").concat(self.state.color === 'black' ? 'white' : 'black'),
                 imgUrl: "http://wx.qlogo.cn/mmopen/jj4e65x0Px2ibxI8cBsLdxueOibCLrqHvg9U91Dvk0ohjQHgO2dias3LiaHazszmh0CJX4xhknnfwibqwDwWfCBaVPslgIcyBG81A/64",
                 success: resolve
               }); // eslint-disable-next-line no-undef
 
               wx.onMenuShareAppMessage({
-                title: "\u542C\u8BF4\u4F60\u56F4\u68CB\u4E0B\u7684\u4E0D\u9519\uFF0C\u6211\u6267".concat(self.state.color === 'black' ? '黑' : '白', "\uFF0C\u6765\u4E00\u5C40\uFF1F"),
-                desc: "".concat(self.state.boardsize, "\u8DEF\uFF0C\u8D346.5\u76EE\uFF0C\u8BA90\u5B50"),
+                title: "\u542C\u8BF4\u4F60\u56F4\u68CB\u4E0B\u7684\u4E0D\u9519\uFF0C\u6211\u6267".concat(self.state.color === 'black' ? '黑' : '白', "\uFF0C\u6765\u4E00\u5C40").concat(self.state.rule === 'CaptureGo' ? '吃子棋' : '', "\uFF1F"),
+                desc: "".concat(self.state.boardsize, "\u8DEF\uFF0C\u8D34").concat(self.state.komi, "\u76EE\uFF0C\u8BA9").concat(self.state.handicap, "\u5B50"),
                 link: "".concat(window.location.origin, "/go?id=").concat(r.data.createGo.id, "&invite=").concat(self.state.color === 'black' ? 'white' : 'black'),
                 imgUrl: "http://wx.qlogo.cn/mmopen/jj4e65x0Px2ibxI8cBsLdxueOibCLrqHvg9U91Dvk0ohjQHgO2dias3LiaHazszmh0CJX4xhknnfwibqwDwWfCBaVPslgIcyBG81A/64",
                 success: resolve
@@ -747,7 +763,6 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      console.log(this.state);
       return _jsx("div", {
         className: __WEBPACK_IMPORTED_MODULE_8__Creation_css___default.a.root
       }, void 0, _jsx("div", {
@@ -773,11 +788,16 @@ function (_React$Component) {
         value: this.state.boardsize,
         onChange: this.handleGeneral('boardsize')
       }, void 0, _ref5, _ref6, _ref7), _ref8, _jsx(__WEBPACK_IMPORTED_MODULE_2_material_ui_SelectField___default.a, {
+        id: "komi",
+        floatingLabelText: "\u8D34\u76EE",
+        value: this.state.komi,
+        onChange: this.handleGeneral('komi')
+      }, void 0, _ref9, _ref10), _ref11, _jsx(__WEBPACK_IMPORTED_MODULE_2_material_ui_SelectField___default.a, {
         id: "color",
         floatingLabelText: "\u6211\u65B9\u989C\u8272",
         value: this.state.color,
         onChange: this.handleGeneral('color')
-      }, void 0, _ref9, _ref10), _jsx("div", {
+      }, void 0, _ref12, _ref13), _jsx("div", {
         className: __WEBPACK_IMPORTED_MODULE_8__Creation_css___default.a.submit
       }, void 0, _jsx(__WEBPACK_IMPORTED_MODULE_5_material_ui_RaisedButton___default.a, {
         label: "\u53D1\u8D77\u6311\u6218",
@@ -856,8 +876,8 @@ exports.locals = {
 /***/ (function(module, exports) {
 
 
-    var doc = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createGo"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"rule"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"defaultValue":null},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"boardsize"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},"defaultValue":null},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"color"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"defaultValue":null},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"goal"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}},"defaultValue":null}],"directives":[],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":null,"name":{"kind":"Name","value":"createGo"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"rule"},"value":{"kind":"Variable","name":{"kind":"Name","value":"rule"}}},{"kind":"Argument","name":{"kind":"Name","value":"boardsize"},"value":{"kind":"Variable","name":{"kind":"Name","value":"boardsize"}}},{"kind":"Argument","name":{"kind":"Name","value":"color"},"value":{"kind":"Variable","name":{"kind":"Name","value":"color"}}},{"kind":"Argument","name":{"kind":"Name","value":"goal"},"value":{"kind":"Variable","name":{"kind":"Name","value":"goal"}}}],"directives":[],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":null,"name":{"kind":"Name","value":"id"},"arguments":[],"directives":[],"selectionSet":null}]}}]}}],"loc":{"start":0,"end":172}};
-    doc.loc.source = {"body":"mutation createGo($rule: String!, $boardsize: Int!, $color: String, $goal: Int) {\n  createGo(rule: $rule, boardsize: $boardsize, color: $color, goal: $goal) {\n    id\n  }\n}\n","name":"GraphQL request","locationOffset":{"line":1,"column":1}};
+    var doc = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createGo"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"rule"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},"defaultValue":null},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"boardsize"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},"defaultValue":null},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"handicap"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},"defaultValue":null},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"komi"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}},"defaultValue":null},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"color"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"defaultValue":null},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"goal"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}},"defaultValue":null}],"directives":[],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":null,"name":{"kind":"Name","value":"createGo"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"rule"},"value":{"kind":"Variable","name":{"kind":"Name","value":"rule"}}},{"kind":"Argument","name":{"kind":"Name","value":"boardsize"},"value":{"kind":"Variable","name":{"kind":"Name","value":"boardsize"}}},{"kind":"Argument","name":{"kind":"Name","value":"handicap"},"value":{"kind":"Variable","name":{"kind":"Name","value":"handicap"}}},{"kind":"Argument","name":{"kind":"Name","value":"komi"},"value":{"kind":"Variable","name":{"kind":"Name","value":"komi"}}},{"kind":"Argument","name":{"kind":"Name","value":"color"},"value":{"kind":"Variable","name":{"kind":"Name","value":"color"}}},{"kind":"Argument","name":{"kind":"Name","value":"goal"},"value":{"kind":"Variable","name":{"kind":"Name","value":"goal"}}}],"directives":[],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":null,"name":{"kind":"Name","value":"id"},"arguments":[],"directives":[],"selectionSet":null}]}}]}}],"loc":{"start":0,"end":270}};
+    doc.loc.source = {"body":"mutation createGo(\n  $rule: String!\n  $boardsize: Int!\n  $handicap: Int!\n  $komi: Float!\n  $color: String\n  $goal: Int\n) {\n  createGo(\n    rule: $rule\n    boardsize: $boardsize\n    handicap: $handicap\n    komi: $komi\n    color: $color\n    goal: $goal\n  ) {\n    id\n  }\n}\n","name":"GraphQL request","locationOffset":{"line":1,"column":1}};
   
 
     var names = {};
@@ -909,14 +929,17 @@ function _jsx(type, props, key, children) { if (!REACT_ELEMENT_TYPE) { REACT_ELE
 function action(_ref) {
   var client = _ref.client;
 
-  var handleCreate = function handleCreate(rule, boardsize, color, goal) {
+  var handleCreate = function handleCreate(rule, boardsize, handicap, komi, color, goal) {
+    var fixedGoal = rule === 'CaptureGo' ? goal || 1 : null;
     return client.mutate({
       mutation: __WEBPACK_IMPORTED_MODULE_3__creation_graphql___default.a,
       variables: {
         rule: rule,
         boardsize: boardsize,
+        handicap: handicap,
+        komi: komi,
         color: color,
-        goal: goal
+        goal: fixedGoal
       }
     });
   };

@@ -310,6 +310,9 @@ var GoType = new __WEBPACK_IMPORTED_MODULE_0_graphql__["GraphQLObjectType"]({
           },
           white: {
             type: __WEBPACK_IMPORTED_MODULE_0_graphql__["GraphQLString"]
+          },
+          goal: {
+            type: __WEBPACK_IMPORTED_MODULE_0_graphql__["GraphQLInt"]
           }
         }
       })
@@ -2850,10 +2853,10 @@ var createGo = {
       type: new __WEBPACK_IMPORTED_MODULE_0_graphql__["GraphQLNonNull"](__WEBPACK_IMPORTED_MODULE_0_graphql__["GraphQLInt"])
     },
     handicap: {
-      type: __WEBPACK_IMPORTED_MODULE_0_graphql__["GraphQLInt"]
+      type: new __WEBPACK_IMPORTED_MODULE_0_graphql__["GraphQLNonNull"](__WEBPACK_IMPORTED_MODULE_0_graphql__["GraphQLInt"])
     },
     komi: {
-      type: __WEBPACK_IMPORTED_MODULE_0_graphql__["GraphQLFloat"]
+      type: new __WEBPACK_IMPORTED_MODULE_0_graphql__["GraphQLNonNull"](__WEBPACK_IMPORTED_MODULE_0_graphql__["GraphQLFloat"])
     },
     color: {
       type: __WEBPACK_IMPORTED_MODULE_0_graphql__["GraphQLString"]

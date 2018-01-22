@@ -7,16 +7,20 @@ import Layout from '../../components/Layout';
 import createGo from './creation.graphql';
 
 function action({ client }) {
-  const handleCreate = (rule, boardsize, color, goal) =>
-    client.mutate({
+  const handleCreate = (rule, boardsize, handicap, komi, color, goal) => {
+    const fixedGoal = rule === 'CaptureGo' ? goal || 1 : null;
+    return client.mutate({
       mutation: createGo,
       variables: {
         rule,
         boardsize,
+        handicap,
+        komi,
         color,
-        goal,
+        goal: fixedGoal,
       },
     });
+  };
 
   return {
     chunks: ['go-creation'],

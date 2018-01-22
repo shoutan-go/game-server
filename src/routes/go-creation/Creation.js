@@ -23,6 +23,8 @@ class Creation extends React.Component {
       rule: 'Go',
       boardsize: 19,
       color: 'black',
+      handicap: 0,
+      komi: 6.5,
       goal: null,
       goalErrorText: null,
     };
@@ -36,9 +38,11 @@ class Creation extends React.Component {
     newState.rule = value;
     if (value === 'Go') {
       newState.goal = null;
+      newState.komi = 6.5;
     }
     if (value === 'CaptureGo') {
       newState.goal = 1;
+      newState.komi = 0;
     }
     this.setState(newState);
   }
@@ -71,8 +75,10 @@ class Creation extends React.Component {
       .create(
         this.state.rule,
         this.state.boardsize,
+        this.state.handicap,
+        this.state.komi,
         this.state.color,
-        typeof this.state.goal === 'number' ? this.state.goal : 1,
+        typeof this.state.goal === 'number' ? this.state.goal : null,
       )
       .then(r => {
         swal({
@@ -90,7 +96,7 @@ class Creation extends React.Component {
               wx.onMenuShareTimeline({
                 title: `听说你围棋下的不错，我执${
                   self.state.color === 'black' ? '黑' : '白'
-                }，来一局？`,
+                }，来一局${self.state.rule === 'CaptureGo' ? '吃子棋' : ''}？`,
                 link: `${window.location.origin}/go?id=${
                   r.data.createGo.id
                 }&invite=${self.state.color === 'black' ? 'white' : 'black'}`,
@@ -101,8 +107,10 @@ class Creation extends React.Component {
               wx.onMenuShareAppMessage({
                 title: `听说你围棋下的不错，我执${
                   self.state.color === 'black' ? '黑' : '白'
-                }，来一局？`,
-                desc: `${self.state.boardsize}路，贴6.5目，让0子`,
+                }，来一局${self.state.rule === 'CaptureGo' ? '吃子棋' : ''}？`,
+                desc: `${self.state.boardsize}路，贴${self.state.komi}目，让${
+                  self.state.handicap
+                }子`,
                 link: `${window.location.origin}/go?id=${
                   r.data.createGo.id
                 }&invite=${self.state.color === 'black' ? 'white' : 'black'}`,
@@ -120,7 +128,6 @@ class Creation extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <div className={s.root}>
         <div className={s.container}>
@@ -155,6 +162,16 @@ class Creation extends React.Component {
               <MenuItem value={9} primaryText="9路" />
               <MenuItem value={13} primaryText="13路" />
               <MenuItem value={19} primaryText="19路" />
+            </SelectField>
+            <br />
+            <SelectField
+              id="komi"
+              floatingLabelText="贴目"
+              value={this.state.komi}
+              onChange={this.handleGeneral('komi')}
+            >
+              <MenuItem value={0} primaryText="0目" />
+              <MenuItem value={6.5} primaryText="6.5目" />
             </SelectField>
             <br />
             <SelectField
