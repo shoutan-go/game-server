@@ -205,6 +205,9 @@ class Go extends React.Component {
             type: 'pass',
           }),
         );
+        this.setState({
+          temporary: null,
+        });
       }
     },
     resign: () => {
@@ -215,6 +218,9 @@ class Go extends React.Component {
             type: 'resign',
           }),
         );
+        this.setState({
+          temporary: null,
+        });
       }
     },
     click: (i, j) => {

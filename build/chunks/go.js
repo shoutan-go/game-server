@@ -945,6 +945,10 @@ function (_React$Component) {
               color: _this.state.color,
               type: 'pass'
             }));
+
+            _this.setState({
+              temporary: null
+            });
           }
         },
         resign: function resign() {
@@ -953,6 +957,10 @@ function (_React$Component) {
               color: _this.state.color,
               type: 'resign'
             }));
+
+            _this.setState({
+              temporary: null
+            });
           }
         },
         click: function click(i, j) {
