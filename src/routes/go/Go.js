@@ -171,7 +171,7 @@ class Go extends React.Component {
       } else {
         this.controledEngine = () => {
           const controledEngine = new GameEngine[this.engine.type](
-            this.engine.info,
+            Object.assign({}, this.engine.info, { result: null }),
             this.engine.moves.slice(0, move),
           );
           return controledEngine;
@@ -223,10 +223,7 @@ class Go extends React.Component {
       }
     },
     click: (i, j) => {
-      if (
-        this.engine.currentColor() === this.state.color &&
-        this.engine.rules(this.state.color, i, j)
-      ) {
+      if (this.engine.rules(this.state.color, i, j)) {
         this.setState({
           temporary: {
             color: this.state.color,

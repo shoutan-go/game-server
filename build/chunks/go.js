@@ -908,7 +908,9 @@ function (_React$Component) {
                       };
                     } else {
                       _this.controledEngine = function () {
-                        var controledEngine = new __WEBPACK_IMPORTED_MODULE_4_game_engine___default.a[_this.engine.type](_this.engine.info, _this.engine.moves.slice(0, move));
+                        var controledEngine = new __WEBPACK_IMPORTED_MODULE_4_game_engine___default.a[_this.engine.type](Object.assign({}, _this.engine.info, {
+                          result: null
+                        }), _this.engine.moves.slice(0, move));
                         return controledEngine;
                       };
                     }
@@ -964,7 +966,7 @@ function (_React$Component) {
           }
         },
         click: function click(i, j) {
-          if (_this.engine.currentColor() === _this.state.color && _this.engine.rules(_this.state.color, i, j)) {
+          if (_this.engine.rules(_this.state.color, i, j)) {
             _this.setState({
               temporary: {
                 color: _this.state.color,
