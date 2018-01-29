@@ -1729,14 +1729,30 @@ __WEBPACK_IMPORTED_MODULE_5__redis__["b" /* subscriber */].on('message', functio
             moves = _ref2[2];
 
         var engine = new __WEBPACK_IMPORTED_MODULE_1_game_engine___default.a[rule](info, moves.map(JSON.parse));
-        var result = engine[msg.type](msg.color, msg.position && msg.position[0], msg.position && msg.position[1]);
+        var color;
+
+        if (info.black === req.user.id) {
+          color = __WEBPACK_IMPORTED_MODULE_1_game_engine___default.a.Go.COLOR.BLACK;
+        } else if (info.white === req.user.id) {
+          color = __WEBPACK_IMPORTED_MODULE_1_game_engine___default.a.Go.COLOR.WHITE;
+        }
+
+        if (!color) {
+          return;
+        }
+
+        var result = engine[msg.type](color, msg.position && msg.position[0], msg.position && msg.position[1]);
 
         if (typeof result === 'number' || typeof result === 'boolean' && result) {
-          __WEBPACK_IMPORTED_MODULE_5__redis__["a" /* redis */].rpushAsync("moves:".concat(ws.channel), JSON.stringify(msg)).then(function () {
+          __WEBPACK_IMPORTED_MODULE_5__redis__["a" /* redis */].rpushAsync("moves:".concat(ws.channel), JSON.stringify(Object.assign({
+            color: color
+          }, msg))).then(function () {
             return __WEBPACK_IMPORTED_MODULE_5__redis__["a" /* redis */].publishAsync("channel:".concat(ws.channel), JSON.stringify({
               code: 'ok',
               type: 'delta',
-              move: msg
+              move: Object.assign({
+                color: color
+              }, msg)
             }));
           }).then(function () {
             if (engine.winner() === 'estimate') {

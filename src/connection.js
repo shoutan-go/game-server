@@ -28,8 +28,17 @@ export default function() {
         redis.lrangeAsync(`moves:${ws.channel}`, 0, -1),
       ]).then(([rule, info, moves]) => {
         const engine = new GameEngine[rule](info, moves.map(JSON.parse));
+        let color;
+        if (info.black === req.user.id) {
+          color = GameEngine.Go.COLOR.BLACK;
+        } else if (info.white === req.user.id) {
+          color = GameEngine.Go.COLOR.WHITE;
+        }
+        if (!color) {
+          return;
+        }
         const result = engine[msg.type](
-          msg.color,
+          color,
           msg.position && msg.position[0],
           msg.position && msg.position[1],
         );
@@ -38,14 +47,17 @@ export default function() {
           (typeof result === 'boolean' && result)
         ) {
           redis
-            .rpushAsync(`moves:${ws.channel}`, JSON.stringify(msg))
+            .rpushAsync(
+              `moves:${ws.channel}`,
+              JSON.stringify(Object.assign({ color }, msg)),
+            )
             .then(() =>
               redis.publishAsync(
                 `channel:${ws.channel}`,
                 JSON.stringify({
                   code: 'ok',
                   type: 'delta',
-                  move: msg,
+                  move: Object.assign({ color }, msg),
                 }),
               ),
             )
