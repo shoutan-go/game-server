@@ -123,9 +123,8 @@ class Go extends React.Component {
       }
     },
     result: r => {
-      this.setState({
-        result: r,
-      });
+      this.engine.info.result = r;
+      this.game.update();
     },
     update: inheritState => {
       this.setState(
@@ -147,7 +146,7 @@ class Go extends React.Component {
             ],
           },
           turn: this.controledEngine().currentColor(),
-          result: this.state.result || this.engine.info.result,
+          result: this.engine.info.result,
           game: {
             boardMoves: this.controledEngine().boardMoves,
             board: this.controledEngine().board,

@@ -4207,8 +4207,8 @@ functional-red-black-tree@^1.0.1:
   resolved "http://registry.npm.taobao.org/functional-red-black-tree/download/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
 
 "game-engine@git+https://github.com/shoutan-go/game-engine.git":
-  version "0.3.5"
-  resolved "git+https://github.com/shoutan-go/game-engine.git#dadc79ed2af40081e8f7265ea21899a4a389d427"
+  version "0.3.6"
+  resolved "git+https://github.com/shoutan-go/game-engine.git#a985895f0f42e86e25f1760e01bea03c088e0aae"
 
 gauge@~2.7.3:
   version "2.7.4"

@@ -857,9 +857,9 @@ function (_React$Component) {
           }
         },
         result: function result(r) {
-          _this.setState({
-            result: r
-          });
+          _this.engine.info.result = r;
+
+          _this.game.update();
         },
         update: function update(inheritState) {
           _this.setState(Object.assign(inheritState || {}, {
@@ -876,7 +876,7 @@ function (_React$Component) {
               captured: _this.controledEngine().captured[__WEBPACK_IMPORTED_MODULE_4_game_engine___default.a.Go.COLOR.WHITE]
             },
             turn: _this.controledEngine().currentColor(),
-            result: _this.state.result || _this.engine.info.result,
+            result: _this.engine.info.result,
             game: {
               boardMoves: _this.controledEngine().boardMoves,
               board: _this.controledEngine().board,
