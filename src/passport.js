@@ -49,7 +49,7 @@ passport.use(
                 id: req.user.id,
                 email: `${id}@wechat.account.shoutanwq.com.`,
                 logins: [{ name: loginName, key: id }],
-                claims: [{ type: claimType, value: id }],
+                claims: [{ type: claimType, value: accessToken }],
                 profile: {
                   displayName: profile.nickname,
                   gender: profile.sex,
