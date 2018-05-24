@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: game-server
+  labels:
+    app: game-server
+    tier: frontend
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: game-server
+        tier: frontend
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - image: registry-vpc.cn-qingdao.aliyuncs.com/shoutan/game-server:latest
+        name: game-server
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: game-server
+        - secretRef:
+            name: web-secrets
+      imagePullSecrets:
+      - name: aliyun-qingdao-registry-secret

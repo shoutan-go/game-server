@@ -195,6 +195,7 @@ app.get('*', async (req, res, next) => {
     };
     const route = await router.resolve({
       ...context,
+      hostname: req.hostname,
       pathname: req.path,
       query: req.query,
     });
