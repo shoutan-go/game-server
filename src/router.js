@@ -14,6 +14,7 @@ import routes from './routes';
 export default new UniversalRouter(routes, {
   resolveRoute(context, params) {
     if (context.route.protected && !context.store.getState().user) {
+      console.log('return to',`//${context.hostname}${context.pathname}?${querystring.stringify(context.query)}`)
       return {
         redirect: '//shoutanwq.com/login/wechat',
         from: `//${context.hostname}${context.pathname}?${querystring.stringify(context.query)}`,

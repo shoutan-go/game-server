@@ -19,15 +19,15 @@ spec:
     spec:
       terminationGracePeriodSeconds: 60
       containers:
-      - image: registry-vpc.cn-qingdao.aliyuncs.com/shoutan/game-server:latest
-        name: game-server
-        imagePullPolicy: Always
-        ports:
-          - containerPort: 8080
-        envFrom:
+      - envFrom:
         - configMapRef:
             name: game-server
         - secretRef:
             name: web-secrets
+        image: registry-vpc.cn-qingdao.aliyuncs.com/shoutan/game-server:latest
+        name: game-server
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
       imagePullSecrets:
       - name: aliyun-qingdao-registry-secret
