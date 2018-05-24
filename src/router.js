@@ -15,8 +15,8 @@ export default new UniversalRouter(routes, {
   resolveRoute(context, params) {
     if (context.route.protected && !context.store.getState().user) {
       return {
-        redirect: 'http://shoutanwq.com/login/wechat',
-        from: `${context.hostname}${context.pathname}?${querystring.stringify(context.query)}`,
+        redirect: '//shoutanwq.com/login/wechat',
+        from: `//${context.hostname}${context.pathname}?${querystring.stringify(context.query)}`,
       };
     }
     if (typeof context.route.load === 'function') {
