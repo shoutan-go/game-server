@@ -13,39 +13,41 @@ const updateGo = {
     GoInfo.findOne({
       where: {
         id,
-      }
-    }).then(goInfo => {
-      if (
-        goInfo[color] === null &&
-        root.request.user &&
-        goInfo.black !== root.request.user.id &&
-        goInfo.white !== root.request.user.id
-      ) {
-        return GoInfo.update({
-          [color]: root.request.user.id
-        }, {
-          where: {
-            id,
-          }
-        })
-      }
-      return Promise.resolve(true);
+      },
     })
+      .then(goInfo => {
+        if (
+          goInfo[color] === null &&
+          root.request.user &&
+          goInfo.black !== root.request.user.id &&
+          goInfo.white !== root.request.user.id
+        ) {
+          return GoInfo.update(
+            {
+              [color]: root.request.user.id,
+            },
+            {
+              where: {
+                id,
+              },
+            },
+          );
+        }
+        return Promise.resolve(true);
+      })
       // publish join
       .then(() =>
         Promise.all([
           GoInfo.findOne({
             where: {
               id,
-            }
+            },
           }),
           GoMove.findOne({
             where: {
               id,
-            }
-          }).then(goMove => {
-            return goMove.move;
-          })
+            },
+          }).then(goMove => goMove.move),
         ]).then(([info, moves]) =>
           User.findAll({
             where: { id: { $in: [info.black, info.white] } },
@@ -108,13 +110,27 @@ const updateGo = {
                   },
                 }),
               )
-              .then(() => Promise.resolve([
-                info.rule, 
-                Object.keys(info).filter(key => ['boardsize', 'handicap', 'komi', 'black', 'white', 'goal', 'result'].includes(key)).reduce((obj, key) => {
-                  obj[key] = info[key];
-                  return obj;
-                }, {})
-              ]));
+              .then(() =>
+                Promise.resolve([
+                  info.rule,
+                  Object.keys(info)
+                    .filter(key =>
+                      [
+                        'boardsize',
+                        'handicap',
+                        'komi',
+                        'black',
+                        'white',
+                        'goal',
+                        'result',
+                      ].includes(key),
+                    )
+                    .reduce((obj, key) => {
+                      obj[key] = info[key];
+                      return obj;
+                    }, {}),
+                ]),
+              );
           }),
         ),
       )

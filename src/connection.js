@@ -31,12 +31,10 @@ export default function() {
         GoMove.findOne({
           where: {
             id: ws.channel,
-          }
-        }).then(move => {
-          return move.move;
-        }),
+          },
+        }).then(move => move.move),
       ]).then(([info, moves]) => {
-        const rule = info.rule;
+        const { rule } = info;
         const engine = new GameEngine[rule](info, moves.map(JSON.parse));
         let color;
         if (info.black === req.user.id) {
@@ -56,14 +54,17 @@ export default function() {
           typeof result === 'number' ||
           (typeof result === 'boolean' && result)
         ) {
-          moves.push(Object.assign({ color }, msg))
-          GoMove.update({
-            moves
-          }, {
-            where: {
-              id: ws.channel,
+          moves.push(Object.assign({ color }, msg));
+          GoMove.update(
+            {
+              moves,
             },
-          })
+            {
+              where: {
+                id: ws.channel,
+              },
+            },
+          )
             .then(() =>
               redis.publishAsync(
                 `channel:${ws.channel}`,
@@ -85,37 +86,35 @@ export default function() {
                     const r = text.match(re);
                     if (r) {
                       info.result = `${r[1]}+${r[2]}`;
-                      info
-                        .save()
-                        .then(() => {
-                          redis.publishAsync(
-                            `channel:${ws.channel}`,
-                            JSON.stringify({
-                              code: 'ok',
-                              type: 'result',
-                              result: `${r[1]}+${r[2]}`,
-                            }),
-                          );
-                        });
+                      info.save().then(() => {
+                        redis.publishAsync(
+                          `channel:${ws.channel}`,
+                          JSON.stringify({
+                            code: 'ok',
+                            type: 'result',
+                            result: `${r[1]}+${r[2]}`,
+                          }),
+                        );
+                      });
                     }
                   });
               } else if (engine.winner()) {
                 const winner = engine.winner();
-                info.result = `${winner === GameEngine.Go.COLOR.BLACK ? 'B+R' : 'W+R'}`
-                info
-                  .save()
-                  .then(() => {
-                    redis.publishAsync(
-                      `channel:${ws.channel}`,
-                      JSON.stringify({
-                        code: 'ok',
-                        type: 'result',
-                        result: `${
-                          winner === GameEngine.Go.COLOR.BLACK ? 'B+R' : 'W+R'
-                        }`,
-                      }),
-                    );
-                  });
+                info.result = `${
+                  winner === GameEngine.Go.COLOR.BLACK ? 'B+R' : 'W+R'
+                }`;
+                info.save().then(() => {
+                  redis.publishAsync(
+                    `channel:${ws.channel}`,
+                    JSON.stringify({
+                      code: 'ok',
+                      type: 'result',
+                      result: `${
+                        winner === GameEngine.Go.COLOR.BLACK ? 'B+R' : 'W+R'
+                      }`,
+                    }),
+                  );
+                });
               }
             });
         }
@@ -159,10 +158,8 @@ export default function() {
         GoMove.findOne({
           where: {
             id: ws.channel,
-          }
-        }).then(move => {
-          return move.move;
-        }),
+          },
+        }).then(move => move.move),
       ]).then(([info, moves]) => {
         const engine = info.rule;
         User.findAll({

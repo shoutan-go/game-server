@@ -5,7 +5,8 @@ import {
   GraphQLFloat,
 } from 'graphql';
 import GoType from '../types/GoType';
-import { GoInfo } from '../data/models';
+import { GoInfo } from '../models';
+
 const createGo = {
   type: GoType,
   args: {
@@ -28,7 +29,8 @@ const createGo = {
     const id = Math.random()
       .toString(16)
       .split('.')[1];
-      return GoInfo.create(Object.assign(
+    return GoInfo.create(
+      Object.assign(
         {
           id,
           rule,
@@ -40,15 +42,16 @@ const createGo = {
           ? { black: root.request.user.id }
           : { white: root.request.user.id },
         goal ? { goal } : {},
-      )).then(() => ({
-        id,
-        engine: rule,
-        info: {
-          boardsize,
-          black: color === 'black' ? root.request.user.id : null,
-          white: color === 'white' ? root.request.user.id : null,
-        },
-      }));
+      ),
+    ).then(() => ({
+      id,
+      engine: rule,
+      info: {
+        boardsize,
+        black: color === 'black' ? root.request.user.id : null,
+        white: color === 'white' ? root.request.user.id : null,
+      },
+    }));
   },
 };
 

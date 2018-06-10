@@ -4,7 +4,7 @@
 
 import { GraphQLNonNull, GraphQLString } from 'graphql';
 import GoType from '../types/GoType';
-import { GoInfo } from '../data/models';
+import { GoInfo } from '../models';
 
 const Go = {
   type: GoType,
@@ -16,18 +16,28 @@ const Go = {
   resolve(root, { id }) {
     return GoInfo.findOne({
       where: {
-        id
-      }
-    }).then(go => {
-      return {
         id,
-        engine: go.rule,
-        info: Object.keys(go).filter(key => ['boardsize', 'handicap', 'komi', 'black', 'white', 'goal', 'result'].includes(key)).reduce((obj, key) => {
+      },
+    }).then(go => ({
+      id,
+      engine: go.rule,
+      info: Object.keys(go)
+        .filter(key =>
+          [
+            'boardsize',
+            'handicap',
+            'komi',
+            'black',
+            'white',
+            'goal',
+            'result',
+          ].includes(key),
+        )
+        .reduce((obj, key) => {
           obj[key] = go[key];
           return obj;
-        }, {})
-      }
-    })
+        }, {}),
+    }));
   },
 };
 

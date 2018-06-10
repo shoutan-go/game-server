@@ -14,10 +14,17 @@ import routes from './routes';
 export default new UniversalRouter(routes, {
   resolveRoute(context, params) {
     if (context.route.protected && !context.store.getState().user) {
-      console.info('return to',`//${context.hostname}${context.pathname}?${querystring.stringify(context.query)}`)
+      console.info(
+        'return to',
+        `//${context.hostname}${context.pathname}?${querystring.stringify(
+          context.query,
+        )}`,
+      );
       return {
         redirect: '//shoutanwq.com/login/wechat',
-        from: `//${context.hostname}${context.pathname}?${querystring.stringify(context.query)}`,
+        from: `//${context.hostname}${context.pathname}?${querystring.stringify(
+          context.query,
+        )}`,
       };
     }
     if (typeof context.route.load === 'function') {

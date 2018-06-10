@@ -18,7 +18,7 @@ class LineIntersection extends React.Component {
     }).isRequired,
   };
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       style: {},

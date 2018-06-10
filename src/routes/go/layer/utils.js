@@ -4,7 +4,6 @@
 import React from 'react';
 
 const render = (boardsize, cx, intersection) => {
-
   const intersections = [];
   for (let i = 0; i < boardsize; i += 1) {
     const row = [];
