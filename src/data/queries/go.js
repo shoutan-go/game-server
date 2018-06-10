@@ -18,27 +18,28 @@ const Go = {
       where: {
         id,
       },
-    }).then(r => r.get({plain: true}))
+    })
+      .then(r => r.get({ plain: true }))
       .then(go => ({
-      id,
-      engine: go.rule,
-      info: Object.keys(go)
-        .filter(key =>
-          [
-            'boardsize',
-            'handicap',
-            'komi',
-            'black',
-            'white',
-            'goal',
-            'result',
-          ].includes(key),
-        )
-        .reduce((obj, key) => {
-          obj[key] = go[key];
-          return obj;
-        }, {}),
-    }));
+        id,
+        engine: go.rule,
+        info: Object.keys(go)
+          .filter(key =>
+            [
+              'boardsize',
+              'handicap',
+              'komi',
+              'black',
+              'white',
+              'goal',
+              'result',
+            ].includes(key),
+          )
+          .reduce((obj, key) => {
+            obj[key] = go[key];
+            return obj;
+          }, {}),
+      }));
   },
 };
 
