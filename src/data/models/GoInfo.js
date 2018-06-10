@@ -3,7 +3,7 @@ import Model from '../sequelize';
 
 const GoInfo = Model.define('GoInfo', {
   id: {
-    type: DataType.CHAR,
+    type: DataType.CHAR(128),
     primaryKey: true,
   },
   rule: {

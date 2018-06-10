@@ -3,7 +3,7 @@ import Model from '../sequelize';
 
 const GoMove = Model.define('GoMove', {
   id: {
-    type: DataType.CHAR,
+    type: DataType.CHAR(128),
     primaryKey: true,
   },
   move: {
