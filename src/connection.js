@@ -57,7 +57,7 @@ export default function() {
           moves.push(Object.assign({ color }, msg));
           GoMove.update(
             {
-              moves,
+              move: moves,
             },
             {
               where: {
