@@ -18,7 +18,8 @@ const Go = {
       where: {
         id,
       },
-    }).then(go => ({
+    }).then(r => r.get({plain: true}))
+      .then(go => ({
       id,
       engine: go.rule,
       info: Object.keys(go)

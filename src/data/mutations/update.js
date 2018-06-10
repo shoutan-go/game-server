@@ -42,7 +42,7 @@ const updateGo = {
             where: {
               id,
             },
-          }),
+          }).then(r => r.get({plain: true})),
           GoMove.findOne({
             where: {
               id,
