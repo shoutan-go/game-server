@@ -35,7 +35,7 @@ export default function() {
         }).then(move => move.move),
       ]).then(([info, moves]) => {
         const { rule } = info;
-        const engine = new GameEngine[rule](info, moves.map(JSON.parse));
+        const engine = new GameEngine[rule](info, moves);
         let color;
         if (info.black === req.user.id) {
           color = GameEngine.Go.COLOR.BLACK;
@@ -194,7 +194,7 @@ export default function() {
               type: 'init',
               game: {
                 engine,
-                moves: moves.map(JSON.parse),
+                moves,
                 info: {
                   result: info.result,
                   boardsize: info.boardsize,
