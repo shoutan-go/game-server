@@ -5,7 +5,7 @@ import {
   GraphQLFloat,
 } from 'graphql';
 import GoType from '../types/GoType';
-import { GoInfo } from '../models';
+import { GoInfo, GoMove } from '../models';
 
 const createGo = {
   type: GoType,
@@ -43,15 +43,21 @@ const createGo = {
           : { white: root.request.user.id },
         goal ? { goal } : {},
       ),
-    ).then(() => ({
-      id,
-      engine: rule,
-      info: {
-        boardsize,
-        black: color === 'black' ? root.request.user.id : null,
-        white: color === 'white' ? root.request.user.id : null,
-      },
-    }));
+    )
+      .then(() =>
+        GoMove.create({
+          id,
+        }),
+      )
+      .then(() => ({
+        id,
+        engine: rule,
+        info: {
+          boardsize,
+          black: color === 'black' ? root.request.user.id : null,
+          white: color === 'white' ? root.request.user.id : null,
+        },
+      }));
   },
 };
 
