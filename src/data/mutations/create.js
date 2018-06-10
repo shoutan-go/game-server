@@ -5,9 +5,7 @@ import {
   GraphQLFloat,
 } from 'graphql';
 import GoType from '../types/GoType';
-
-import { redis } from '../../redis';
-
+import { GoInfo } from '../data/models';
 const createGo = {
   type: GoType,
   args: {
@@ -30,31 +28,27 @@ const createGo = {
     const id = Math.random()
       .toString(16)
       .split('.')[1];
-    return Promise.all([
-      redis.setAsync(`engine:${id}`, rule),
-      redis.hmsetAsync(
-        `info:${id}`,
-        Object.assign(
-          {
-            boardsize,
-            handicap: handicap || 0,
-            komi: komi || 6.5,
-          },
-          color === 'black'
-            ? { black: root.request.user.id }
-            : { white: root.request.user.id },
-          goal ? { goal } : {},
-        ),
-      ),
-    ]).then(() => ({
-      id,
-      engine: rule,
-      info: {
-        boardsize,
-        black: color === 'black' ? root.request.user.id : null,
-        white: color === 'white' ? root.request.user.id : null,
-      },
-    }));
+      return GoInfo.create(Object.assign(
+        {
+          id,
+          rule,
+          boardsize,
+          handicap,
+          komi,
+        },
+        color === 'black'
+          ? { black: root.request.user.id }
+          : { white: root.request.user.id },
+        goal ? { goal } : {},
+      )).then(() => ({
+        id,
+        engine: rule,
+        info: {
+          boardsize,
+          black: color === 'black' ? root.request.user.id : null,
+          white: color === 'white' ? root.request.user.id : null,
+        },
+      }));
   },
 };
 

@@ -2,7 +2,7 @@ import express from 'express';
 import GameEngine from 'game-engine';
 import fetch from 'node-fetch';
 import config from './config';
-import { User, UserProfile } from './data/models';
+import { User, UserProfile, GoInfo, GoMove } from './data/models';
 
 import { redis, subscriber } from './redis';
 
@@ -23,10 +23,20 @@ export default function() {
     ws.on('message', data => {
       const msg = JSON.parse(data);
       Promise.all([
-        redis.getAsync(`engine:${ws.channel}`),
-        redis.hgetallAsync(`info:${ws.channel}`),
-        redis.lrangeAsync(`moves:${ws.channel}`, 0, -1),
-      ]).then(([rule, info, moves]) => {
+        GoInfo.findOne({
+          where: {
+            id: ws.channel,
+          },
+        }),
+        GoMove.findOne({
+          where: {
+            id: ws.channel,
+          }
+        }).then(move => {
+          return move.move;
+        }),
+      ]).then(([info, moves]) => {
+        const rule = info.rule;
         const engine = new GameEngine[rule](info, moves.map(JSON.parse));
         let color;
         if (info.black === req.user.id) {
@@ -46,11 +56,14 @@ export default function() {
           typeof result === 'number' ||
           (typeof result === 'boolean' && result)
         ) {
-          redis
-            .rpushAsync(
-              `moves:${ws.channel}`,
-              JSON.stringify(Object.assign({ color }, msg)),
-            )
+          moves.push(Object.assign({ color }, msg))
+          GoMove.update({
+            moves
+          }, {
+            where: {
+              id: ws.channel,
+            },
+          })
             .then(() =>
               redis.publishAsync(
                 `channel:${ws.channel}`,
@@ -71,12 +84,9 @@ export default function() {
                   .then(text => {
                     const r = text.match(re);
                     if (r) {
-                      redis
-                        .hsetAsync(
-                          `info:${ws.channel}`,
-                          'result',
-                          `${r[1]}+${r[2]}`,
-                        )
+                      info.result = `${r[1]}+${r[2]}`;
+                      info
+                        .save()
                         .then(() => {
                           redis.publishAsync(
                             `channel:${ws.channel}`,
@@ -91,12 +101,9 @@ export default function() {
                   });
               } else if (engine.winner()) {
                 const winner = engine.winner();
-                redis
-                  .hsetAsync(
-                    `info:${ws.channel}`,
-                    'result',
-                    `${winner === GameEngine.Go.COLOR.BLACK ? 'B+R' : 'W+R'}`,
-                  )
+                info.result = `${winner === GameEngine.Go.COLOR.BLACK ? 'B+R' : 'W+R'}`
+                info
+                  .save()
                   .then(() => {
                     redis.publishAsync(
                       `channel:${ws.channel}`,
@@ -144,10 +151,20 @@ export default function() {
       ws.channel = req.params.channel;
       // send new game info
       Promise.all([
-        redis.getAsync(`engine:${ws.channel}`),
-        redis.hgetallAsync(`info:${ws.channel}`),
-        redis.lrangeAsync(`moves:${ws.channel}`, 0, -1),
-      ]).then(([engine, info, moves]) => {
+        GoInfo.findOne({
+          where: {
+            id: ws.channel,
+          },
+        }),
+        GoMove.findOne({
+          where: {
+            id: ws.channel,
+          }
+        }).then(move => {
+          return move.move;
+        }),
+      ]).then(([info, moves]) => {
+        const engine = info.rule;
         User.findAll({
           where: { id: { $in: [info.black, info.white] } },
           include: [

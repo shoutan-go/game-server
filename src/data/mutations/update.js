@@ -1,8 +1,7 @@
 import { GraphQLString, GraphQLNonNull } from 'graphql';
 import GoType from '../types/GoType';
-
+import { User, UserProfile, GoInfo, GoMove } from '../models';
 import { redis } from '../../redis';
-import { User, UserProfile } from '../models';
 
 const updateGo = {
   type: GoType,
@@ -11,26 +10,43 @@ const updateGo = {
     color: { type: GraphQLString },
   },
   resolve: (root, { id, color }) =>
-    redis
-      .hmgetAsync(`info:${id}`, color, 'black', 'white')
-      .then(([r, black, white]) => {
-        if (
-          !r &&
-          root.request.user &&
-          black !== root.request.user.id &&
-          white !== root.request.user.id
-        ) {
-          return redis.hsetAsync(`info:${id}`, color, root.request.user.id);
-        }
-        return Promise.resolve(true);
-      })
+    GoInfo.findOne({
+      where: {
+        id,
+      }
+    }).then(goInfo => {
+      if (
+        goInfo[color] === null &&
+        root.request.user &&
+        goInfo.black !== root.request.user.id &&
+        goInfo.white !== root.request.user.id
+      ) {
+        return GoInfo.update({
+          [color]: root.request.user.id
+        }, {
+          where: {
+            id,
+          }
+        })
+      }
+      return Promise.resolve(true);
+    })
       // publish join
       .then(() =>
         Promise.all([
-          redis.getAsync(`engine:${id}`),
-          redis.hgetallAsync(`info:${id}`),
-          redis.lrangeAsync(`moves:${id}`, 0, -1),
-        ]).then(([engine, info, moves]) =>
+          GoInfo.findOne({
+            where: {
+              id,
+            }
+          }),
+          GoMove.findOne({
+            where: {
+              id,
+            }
+          }).then(goMove => {
+            return goMove.move;
+          })
+        ]).then(([info, moves]) =>
           User.findAll({
             where: { id: { $in: [info.black, info.white] } },
             include: [
@@ -64,7 +80,7 @@ const updateGo = {
                   code: 'ok',
                   type: 'init',
                   game: {
-                    engine,
+                    engine: info.rule,
                     moves: moves.map(JSON.parse),
                     info: {
                       result: info.result,
@@ -92,7 +108,13 @@ const updateGo = {
                   },
                 }),
               )
-              .then(() => Promise.resolve([engine, info]));
+              .then(() => Promise.resolve([
+                info.rule, 
+                Object.keys(info).filter(key => ['boardsize', 'handicap', 'komi', 'black', 'white', 'goal', 'result'].includes(key)).reduce((obj, key) => {
+                  obj[key] = info[key];
+                  return obj;
+                }, {})
+              ]));
           }),
         ),
       )
