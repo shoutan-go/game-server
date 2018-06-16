@@ -23,68 +23,74 @@ const Go = {
           match: id,
           player,
         },
-      }).then(r => {
-        if (r) {
-          return {
-            id: r.game,
-          };
-        }
-        // find the one not full
-        return MatchGame.findOne({
-          where: {
-            match: id,
-          },
-          group: ['game'],
-          having: sequelize.literal('count(player) < 2'),
-        }).then(r1 => {
-          if (r1) {
+      })
+        .then(res => (res ? res.get({ plain: true }) : null))
+        .then(r => {
+          if (r) {
             return {
-              id: r1.game,
-              color: 'white',
+              id: r.game,
             };
           }
-          // create new game
-          return MatchInfo.findOne({
+          // find the one not full
+          return MatchGame.findOne({
             where: {
-              id,
+              match: id,
             },
-          }).then(match => {
-            // create go game
-            const goId = Math.random()
-              .toString(16)
-              .split('.')[1];
-            return GoInfo.create(
-              Object.assign(
-                {
-                  id: goId,
-                  rule: match.rule,
-                  boardsize: match.boardsize,
-                  handicap: match.handicap,
-                  komi: match.komi,
-                  black: player,
+            group: ['game'],
+            having: sequelize.literal('count(player) < 2'),
+          })
+            .then(res => (res ? res.get({ plain: true }) : null))
+            .then(r1 => {
+              if (r1) {
+                return {
+                  id: r1.game,
+                  color: 'white',
+                };
+              }
+              // create new game
+              return MatchInfo.findOne({
+                where: {
+                  id,
                 },
-                match.goal ? { goal: match.goal } : {},
-              ),
-            )
-              .then(() =>
-                GoMove.create({
-                  id: goId,
-                }),
-              )
-              .then(() => {
-                MatchGame.create({
-                  match: match.id,
-                  player,
-                  game: goId,
-                });
               })
-              .then(() => ({
-                id: goId,
-                color: 'black',
-              }));
-          });
+                .then(res => (res ? res.get({ plain: true }) : null))
+                .then(match => {
+                  // create go game
+                  const goId = Math.random()
+                    .toString(16)
+                    .split('.')[1];
+                  return GoInfo.create(
+                    Object.assign(
+                      {
+                        id: goId,
+                        rule: match.rule,
+                        boardsize: match.boardsize,
+                        handicap: match.handicap,
+                        komi: match.komi,
+                        black: player,
+                      },
+                      match.goal ? { goal: match.goal } : {},
+                    ),
+                  )
+                    .then(() =>
+                      GoMove.create({
+                        id: goId,
+                      }),
+                    )
+                    .then(() => {
+                      MatchGame.create({
+                        match: match.id,
+                        player,
+                        game: goId,
+                      });
+                    })
+                    .then(() => ({
+                      id: goId,
+                      color: 'black',
+                    }));
+                });
+            });
         });
-      });
     }
     return {
       id: null,
