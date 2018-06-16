@@ -12,7 +12,7 @@ async function action({ query: { id }, client }) {
   });
 
   return {
-    redirect: `/go?id=${data.id}&invite=${data.color}`,
+    redirect: `/go?id=${data.match.id}&invite=${data.match.color}`,
   };
 }
 
