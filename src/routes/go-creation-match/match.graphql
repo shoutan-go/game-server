@@ -1,0 +1,19 @@
+mutation createGoMatch(
+  $rule: String!
+  $boardsize: Int!
+  $handicap: Int!
+  $komi: Float!
+  $expiredIn: Int!
+  $goal: Int
+) {
+  createGoMatch(
+    rule: $rule
+    boardsize: $boardsize
+    handicap: $handicap
+    komi: $komi
+    expiredIn: $expiredIn
+    goal: $goal
+  ) {
+    id
+  }
+}

@@ -7,7 +7,7 @@ const GoMove = Model.define('GoMove', {
     primaryKey: true,
   },
   move: {
-    type: DataType.STRING,
+    type: DataType.TEXT,
     defaultValue: '[]',
     get() {
       return JSON.parse(this.getDataValue('move'));

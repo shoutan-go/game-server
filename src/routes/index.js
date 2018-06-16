@@ -46,6 +46,21 @@ const routes = {
         },
       ],
     },
+    {
+      path: '/match',
+      protected: true,
+      children: [
+        {
+          path: '/creation',
+          load: () =>
+            import(/* webpackChunkName: 'go-creation-match' */ './go-creation-match'),
+        },
+        {
+          path: '',
+          load: () => import(/* webpackChunkName: 'match' */ './match'),
+        },
+      ],
+    },
     // Wildcard routes, e.g. { path: '(.*)', ... } (must go last)
     {
       path: '(.*)',

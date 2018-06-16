@@ -14,6 +14,8 @@ import UserClaim from './UserClaim';
 import UserProfile from './UserProfile';
 import GoInfo from './GoInfo';
 import GoMove from './GoMove';
+import MatchInfo from './MatchInfo';
+import MatchGame from './MatchGame';
 
 User.hasMany(UserLogin, {
   foreignKey: 'userId',
@@ -41,4 +43,13 @@ function sync(...args) {
 }
 
 export default { sync };
-export { User, UserLogin, UserClaim, UserProfile, GoInfo, GoMove };
+export {
+  User,
+  UserLogin,
+  UserClaim,
+  UserProfile,
+  GoInfo,
+  GoMove,
+  MatchInfo,
+  MatchGame,
+};
