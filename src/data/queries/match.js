@@ -43,7 +43,7 @@ const Go = {
             .then(r1 => {
               if (r1) {
                 return MatchGame.create({
-                  match: r1.id,
+                  match: r1.match,
                   player,
                   game: r1.game,
                 }).then(() => ({
