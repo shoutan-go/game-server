@@ -1,5 +1,6 @@
 query Match($id: String!) {
   match(id: $id) {
     id
+    color
   }
 }

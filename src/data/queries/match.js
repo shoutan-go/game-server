@@ -42,10 +42,14 @@ const Go = {
             .then(res => (res ? res.get({ plain: true }) : null))
             .then(r1 => {
               if (r1) {
-                return {
+                return MatchGame.create({
+                  match: r1.id,
+                  player,
+                  game: r1.game,
+                }).then(() => ({
                   id: r1.game,
                   color: 'white',
-                };
+                }));
               }
               // create new game
               return MatchInfo.findOne({
