@@ -1,7 +1,6 @@
 /**
  * @author lookis on 10/06/2018
  */
-import React from 'react';
 import swal from 'sweetalert2';
 import queryMatch from './match.graphql';
 
@@ -26,9 +25,7 @@ async function action({ query: { id }, client }) {
       wx.closeWindow();
     });
   }
-  return {
-    component: <div />,
-  };
+  return '<div />';
 }
 
 export default action;
