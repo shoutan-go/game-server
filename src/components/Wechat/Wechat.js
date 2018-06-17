@@ -30,7 +30,11 @@ class Wechat extends React.Component {
           wx.config({
             debug: false,
             ...resp.data.wechat,
-            jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'],
+            jsApiList: [
+              'onMenuShareTimeline',
+              'onMenuShareAppMessage',
+              'closeWindow',
+            ],
           });
         });
     }

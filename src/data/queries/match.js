@@ -59,6 +59,16 @@ const Go = {
               })
                 .then(res => (res ? res.get({ plain: true }) : null))
                 .then(match => {
+                  if (
+                    !match ||
+                    new Date(match.createdAt).getTime() +
+                      match.expiredIn * 1000 <
+                      new Date().getTime()
+                  ) {
+                    return {
+                      id: null,
+                    };
+                  }
                   // create go game
                   const goId = Math.random()
                     .toString(16)

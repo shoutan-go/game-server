@@ -1,6 +1,8 @@
 /**
  * @author lookis on 10/06/2018
  */
+import React from 'react';
+import swal from 'sweetalert2';
 import queryMatch from './match.graphql';
 
 async function action({ query: { id }, client }) {
@@ -11,9 +13,20 @@ async function action({ query: { id }, client }) {
     },
   });
 
-  return {
-    redirect: `/go?id=${data.match.id}&invite=${data.match.color}`,
-  };
+  if (data && data.match && data.match.id) {
+    return {
+      redirect: `/go?id=${data.match.id}&invite=${data.match.color}`,
+    };
+  }
+  if (typeof window !== 'undefined') {
+    swal({
+      type: 'error',
+      title: '比赛已结束',
+    }).then(() => {
+      wx.closeWindow();
+    });
+  }
+  return <div />;
 }
 
 export default action;
