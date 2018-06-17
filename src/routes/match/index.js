@@ -25,7 +25,9 @@ async function action({ query: { id }, client }) {
       wx.closeWindow();
     });
   }
-  return '<div />';
+  return {
+    component: '<div/ >',
+  };
 }
 
 export default action;
