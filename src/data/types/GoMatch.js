@@ -1,4 +1,3 @@
-
 import { GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
 
 const GoMatch = new GraphQLObjectType({
