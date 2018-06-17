@@ -27,9 +27,7 @@ async function action({ query: { id }, client }) {
     });
   }
   return {
-    component: (
-      <div />
-    ),
+    component: <div />,
   };
 }
 
