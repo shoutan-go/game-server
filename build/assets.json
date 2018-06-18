@@ -1,29 +1,35 @@
 {
   "go-creation": {
-    "js": "/assets/go-creation.b99263be.chunk.js"
+    "js": "/assets/go-creation.chunk.js"
+  },
+  "go-creation-match": {
+    "js": "/assets/go-creation-match.chunk.js"
   },
   "go": {
-    "js": "/assets/go.122aa9ca.chunk.js"
+    "js": "/assets/go.chunk.js"
   },
   "home": {
-    "js": "/assets/home.1a35d20f.chunk.js"
+    "js": "/assets/home.chunk.js"
   },
   "about": {
-    "js": "/assets/about.b50eea5b.chunk.js"
+    "js": "/assets/about.chunk.js"
   },
   "not-found": {
-    "js": "/assets/not-found.1a8b1d89.chunk.js"
+    "js": "/assets/not-found.chunk.js"
   },
   "login": {
-    "js": "/assets/login.8207c478.chunk.js"
+    "js": "/assets/login.chunk.js"
   },
   "admin": {
-    "js": "/assets/admin.1888928f.chunk.js"
+    "js": "/assets/admin.chunk.js"
+  },
+  "match": {
+    "js": "/assets/match.chunk.js"
   },
   "client": {
-    "js": "/assets/client.52a1de58.js"
+    "js": "/assets/client.js"
   },
   "vendor": {
-    "js": "/assets/vendor.b741e198.js"
+    "js": "/assets/vendor.js"
   }
 }
