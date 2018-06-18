@@ -1,6 +1,7 @@
 /**
  * @author lookis on 10/06/2018
  */
+import React from 'react';
 import swal from 'sweetalert2';
 import queryMatch from './match.graphql';
 
@@ -26,7 +27,9 @@ async function action({ query: { id }, client }) {
     });
   }
   return {
-    component: '<div/ >',
+    chunks: ['match'],
+    title: '匹配中',
+    component: <div />,
   };
 }
 
