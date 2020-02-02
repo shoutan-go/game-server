@@ -15,8 +15,8 @@
 
 import passport from 'passport';
 import { Strategy as WechatStrategy } from 'passport-wechat';
-import { User, UserLogin, UserClaim, UserProfile } from './data/models';
 import config from './config';
+import { User, UserClaim, UserLogin, UserProfile } from './data/models';
 
 passport.serializeUser((user, done) => {
   done(null, user);
@@ -29,8 +29,8 @@ passport.deserializeUser((user, done) => {
 passport.use(
   new WechatStrategy(
     {
-      appID: config.wechat.appId,
-      appSecret: config.wechat.appSecret,
+      appID: config.auth.wechat.appId,
+      appSecret: config.auth.wechat.appSecret,
       callbackURL: 'http://shoutanwq.com/login/wechat/return',
       client: 'wechat',
       scope: 'snsapi_userinfo',
@@ -45,18 +45,33 @@ passport.use(
         if (req.user) {
           const userLogin = await UserLogin.findOne({
             attributes: ['name', 'key'],
-            where: { name: loginName, key: id },
+            where: { name: loginName, key: profile.openid },
           });
           if (userLogin) {
             // There is already a Facebook account that belongs to you.
             // Sign in with that account or delete it, then link it with your current account.
+            await UserClaim.update({
+              value: accessToken,
+            }, {
+              where: {
+                userId: req.user.id,
+              }
+            })
+            await UserProfile.update({
+              displayName: profile.nickname,
+              picture: profile.headimgurl,
+            }, {
+              where: {
+                userId: req.user.id,
+              }
+            })
             done();
           } else {
             const user = await User.create(
               {
                 id: req.user.id,
                 email: `${id}@wechat.account.shoutanwq.com.`,
-                logins: [{ name: loginName, key: id }],
+                logins: [{ name: loginName, key: profile.openid }],
                 claims: [{ type: claimType, value: accessToken }],
                 profile: {
                   displayName: profile.nickname,
@@ -80,7 +95,10 @@ passport.use(
         } else {
           const users = await User.findAll({
             attributes: ['id', 'email'],
-            where: { '$logins.name$': loginName, '$logins.key$': id },
+            where: {
+              '$logins.name$': loginName,
+              '$logins.key$': profile.openid,
+            },
             include: [
               {
                 attributes: ['name', 'key'],
@@ -92,6 +110,7 @@ passport.use(
           });
           if (users.length) {
             const user = users[0].get({ plain: true });
+            console.info('passport user:', user);
             done(null, user);
           } else {
             let user = await User.findOne({
@@ -100,13 +119,28 @@ passport.use(
             if (user) {
               // There is already an account using this email address. Sign in to
               // that account and link it with Facebook manually from Account Settings.
+              await UserClaim.update({
+                value: accessToken,
+              }, {
+                where: {
+                  userId: user.id,
+                }
+              })
+              await UserProfile.update({
+                displayName: profile.nickname,
+                picture: profile.headimgurl,
+              }, {
+                where: {
+                  userId: req.user.id,
+                }
+              })
               done(null);
             } else {
               user = await User.create(
                 {
                   email: `${id}@wechat.account.shoutanwq.com`,
                   emailConfirmed: true,
-                  logins: [{ name: loginName, key: id }],
+                  logins: [{ name: loginName, key: profile.openid }],
                   claims: [{ type: claimType, value: accessToken }],
                   profile: {
                     displayName: profile.nickname,
@@ -130,6 +164,7 @@ passport.use(
           }
         }
       };
+
       fooBar().catch(done);
     },
   ),
