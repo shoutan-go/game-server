@@ -29,8 +29,8 @@ passport.deserializeUser((user, done) => {
 passport.use(
   new WechatStrategy(
     {
-      appID: config.auth.wechat.appId,
-      appSecret: config.auth.wechat.appSecret,
+      appID: config.wechat.appId,
+      appSecret: config.wechat.appSecret,
       callbackURL: 'http://shoutanwq.com/login/wechat/return',
       client: 'wechat',
       scope: 'snsapi_userinfo',
