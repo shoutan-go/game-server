@@ -1,7 +1,7 @@
-import { GraphQLString, GraphQLNonNull } from 'graphql';
-import GoType from '../types/GoType';
-import { User, UserProfile, GoInfo, GoMove } from '../models';
+import { GraphQLNonNull, GraphQLString } from 'graphql';
 import { redis } from '../../redis';
+import { GoInfo, GoMove, User, UserProfile } from '../models';
+import GoType from '../types/GoType';
 
 const updateGo = {
   type: GoType,
@@ -83,7 +83,7 @@ const updateGo = {
                   type: 'init',
                   game: {
                     engine: info.rule,
-                    moves: moves.map(JSON.parse),
+                    moves,
                     info: {
                       result: info.result,
                       boardsize: info.boardsize,
@@ -125,10 +125,10 @@ const updateGo = {
                         'result',
                       ].includes(key),
                     )
-                    .reduce((obj, key) => {
-                      obj[key] = info[key];
-                      return obj;
-                    }, {}),
+                    .reduce(
+                      (obj, key) => Object.assign(obj, { key: info[key] }),
+                      {},
+                    ),
                 ]),
               );
           }),
