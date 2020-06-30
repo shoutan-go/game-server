@@ -30,7 +30,7 @@
     "core-js": "^2.5.3",
     "express": "^4.16.2",
     "express-graphql": "^0.6.11",
-    "express-jwt": "^5.3.0",
+    "express-jwt": "^6.0.0",
     "express-session": "^1.15.6",
     "express-ws": "^3.0.0",
     "game-engine": "git+https://github.com/shoutan-go/game-engine.git",
